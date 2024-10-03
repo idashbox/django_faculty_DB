@@ -5,6 +5,7 @@ from django_faculty_DB.models import User
 
 fake = Faker()
 
+
 class Command(BaseCommand):
     help = 'Generate test data for the database'
 
@@ -13,23 +14,21 @@ class Command(BaseCommand):
 
     def create_users(self, num):
         users = []
-        used_names = set()  # Для уникальных имен
-        used_emails = set()  # Для уникальных email
+        used_names = set()
+        used_emails = set()
 
         for _ in range(num):
-            # Генерация уникального имени
+
             name = fake.name()
             while name in used_names or User.objects.filter(name=name).exists():
-                name = fake.name() + str(random.randint(1, 10000))  # Уникальный суффикс
+                name = fake.name() + str(random.randint(1, 10000))
             used_names.add(name)
 
-            # Генерация уникального email
             email = fake.unique.email()
             while email in used_emails or User.objects.filter(email=email).exists():
-                email = fake.email() + str(random.randint(1, 10000))  # Уникальный суффикс
+                email = fake.email() + str(random.randint(1, 10000))
             used_emails.add(email)
 
-            # Создание пользователя
             user = User(
                 name=name,
                 email=email,
@@ -43,6 +42,5 @@ class Command(BaseCommand):
             )
             users.append(user)
 
-        # Вставка в базу данных
         User.objects.bulk_create(users)
         self.stdout.write(self.style.SUCCESS(f'Created {num} users'))

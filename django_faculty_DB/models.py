@@ -52,7 +52,7 @@ class Group(models.Model):
 class Teacher(models.Model):
     id = models.AutoField(primary_key=True)
     user = models.OneToOneField('User', on_delete=models.CASCADE)
-    department = models.ForeignKey('Department', related_name='teachers', on_delete=models.CASCADE)
+    department = models.ForeignKey('Department', related_name='teachers', on_delete=models.CASCADE, null=True, blank=True)
     year_of_start_of_work = models.CharField(max_length=100)
 
     def __str__(self):
@@ -80,4 +80,8 @@ class UserToGroup(models.Model):
 
 #python manage.py flush
 #python manage.py create_test_data
+#python manage.py makemigrations
+#python manage.py migrate
+
+
 
