@@ -1,0 +1,32 @@
+<h1>Users</h1>
+{% if page_obj.object_list %}
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Login</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in page_obj.object_list %}
+        <tr>
+          <td>{{ user.name }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.login }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+    {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}">Show previous 100 users</a>
+  {% endif %}
+  {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}">Show next 100 users</a>
+  {% endif %}
+  <a href="{% url 'home' %}">Hide user information</a>
+{% else %}
+  <p>No users to display.</p>
+  <a href="?page=1">Show first 100 users</a>
+{% endif %}
+  
