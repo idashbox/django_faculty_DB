@@ -1,4 +1,6 @@
+<!-- myapp/templates/user_list.html -->
 <h1>Users</h1>
+<a href="{% url 'user_new' %}">Add user</a>
 {% if page_obj.object_list %}
   <table>
     <thead>
@@ -6,6 +8,7 @@
         <th>Name</th>
         <th>Email</th>
         <th>Login</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -14,11 +17,15 @@
           <td>{{ user.name }}</td>
           <td>{{ user.email }}</td>
           <td>{{ user.login }}</td>
+          <td>
+            <a href="{% url 'user_edit' user.pk %}">Edit</a> |
+            <a href="{% url 'user_delete' user.pk %}">Delete</a>
+          </td>
         </tr>
       {% endfor %}
     </tbody>
   </table>
-    {% if page_obj.has_previous %}
+  {% if page_obj.has_previous %}
     <a href="?page={{ page_obj.previous_page_number }}">Show previous 100 users</a>
   {% endif %}
   {% if page_obj.has_next %}
@@ -29,4 +36,3 @@
   <p>No users to display.</p>
   <a href="?page=1">Show first 100 users</a>
 {% endif %}
-  
