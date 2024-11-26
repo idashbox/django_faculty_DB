@@ -1,5 +1,8 @@
 package com.example.faculty_app
 
+import android.app.Activity
+import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,10 +14,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.faculty_app.data.view_models.TeacherViewModel
 import com.example.faculty_app.data.models.Teacher
+import com.example.faculty_app.ui.teachers.EditTeacherActivity
 
-class TeacherAdapter(private val viewModel: TeacherViewModel,
-    private val onEditClick: (Teacher) -> Unit
-    ) : ListAdapter<Teacher, TeacherAdapter.TeacherViewHolder>(TeacherDiffCallback()) {
+class TeacherAdapter(private val viewModel: TeacherViewModel) : ListAdapter<Teacher, TeacherAdapter.TeacherViewHolder>(TeacherDiffCallback()) {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TeacherViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.teacher_item, parent, false)
@@ -31,14 +33,25 @@ class TeacherAdapter(private val viewModel: TeacherViewModel,
             private val deleteButton: Button = itemView.findViewById(R.id.button_delete)
             private val editButton: Button = itemView.findViewById(R.id.button_edit)
 
-            init {
-                // Обработчик для кнопки редактирования
+            fun bind(teacher: Teacher) {
+                Log.d("TeacherAdapter", "Binding teacher: ${teacher.user.name}")
+                nameTextView.text = teacher.user.name + teacher.user.surname
+
                 editButton.setOnClickListener {
-                    val position = adapterPosition
-                    if (position != RecyclerView.NO_POSITION) {
-                        val teacher = getItem(position)
-                        onEditClick(teacher) // Вызываем переданный коллбэк
+                    val intent = Intent(itemView.context, EditTeacherActivity::class.java).apply {
+                        putExtra("TEACHER_ID", teacher.id)
+                        putExtra("USER_ID", teacher.user.id)
+                        putExtra("TEACHER_NAME", teacher.user.name)
+                        putExtra("TEACHER_EMAIL", teacher.user.email)
+                        putExtra("TEACHER_LOGIN", teacher.user.login)
+                        putExtra("TEACHER_SURNAME", teacher.user.surname)
+                        putExtra("TEACHER_MIDDLE_NAME", teacher.user.middle_name)
+                        putExtra("TEACHER_BIRTHDAY", teacher.user.birthday)
+                        putExtra("TEACHER_GENDER", teacher.user.sex)
+                        putExtra("TEACHER_YEARS_OF_WORK", teacher.year_of_start_of_work)
+                        putExtra("TEACHER_DEPARTMENT_ID", teacher.department)
                     }
+                    (itemView.context as Activity).startActivityForResult(intent, 2)
                 }
 
                 // Обработчик для кнопки удаления
@@ -56,10 +69,6 @@ class TeacherAdapter(private val viewModel: TeacherViewModel,
                             .show()
                     }
                 }
-            }
-
-            fun bind(teacher: Teacher) {
-                nameTextView.text = teacher.user.name + " " + teacher.user.surname // Устанавливаем имя пользователя
             }
         }
 

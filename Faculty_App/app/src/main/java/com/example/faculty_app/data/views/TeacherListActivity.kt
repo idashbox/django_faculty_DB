@@ -34,25 +34,7 @@ class TeacherListActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        adapter = TeacherAdapter(
-            viewModel = teacherViewModel,
-            onEditClick = { teacher ->
-                val intent = Intent(this, EditTeacherActivity::class.java).apply {
-                    putExtra("TEACHER_ID", teacher.id)
-                    putExtra("USER_ID", teacher.user.id)
-                    putExtra("TEACHER_NAME", teacher.user.name)
-                    putExtra("TEACHER_EMAIL", teacher.user.email)
-                    putExtra("TEACHER_LOGIN", teacher.user.login)
-                    putExtra("TEACHER_SURNAME", teacher.user.surname)
-                    putExtra("TEACHER_MIDDLE_NAME", teacher.user.middle_name)
-                    putExtra("TEACHER_BIRTHDAY", teacher.user.birthday)
-                    putExtra("TEACHER_GENDER", teacher.user.sex)
-                    putExtra("TEACHER_YEARS_OF_WORK", teacher.year_of_start_of_work)
-                    putExtra("TEACHER_DEPARTMENT_ID", teacher.department)
-                }
-                startActivity(intent)
-            }
-        )
+        adapter = TeacherAdapter(teacherViewModel)
         recyclerView.adapter = adapter
 
         findViewById<Button>(R.id.button_add_teacher).setOnClickListener {
@@ -75,8 +57,9 @@ class TeacherListActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 1 && resultCode == RESULT_OK) {
+        if ((requestCode == 1 || requestCode == 2) && resultCode == RESULT_OK) {
             teacherViewModel.fetchTeachers()
         }
     }
+
 }

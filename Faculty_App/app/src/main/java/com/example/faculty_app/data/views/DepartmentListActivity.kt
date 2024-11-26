@@ -58,8 +58,9 @@ class DepartmentListActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 1 && resultCode == RESULT_OK) {
+        if ((requestCode == 1 || requestCode == 2) && resultCode == RESULT_OK) {
             departmentViewModel.fetchDepartments()
         }
     }
+
 }

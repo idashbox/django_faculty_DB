@@ -25,7 +25,8 @@ class DepartmentViewModel(private val departmentRepository: DepartmentRepository
         departmentRepository.getDepartments().enqueue(object : Callback<List<Department>> {
             override fun onResponse(call: Call<List<Department>>, response: Response<List<Department>>) {
                 if (response.isSuccessful) {
-                    _departments.postValue(response.body())
+                    val sortedList = response.body()?.sortedBy { it.id } ?: emptyList()
+                    _departments.postValue(sortedList)
                 } else {
                     Log.e("DepartmentViewModel", "Failed to fetch departments: ${response.message()}")
                 }
@@ -36,6 +37,8 @@ class DepartmentViewModel(private val departmentRepository: DepartmentRepository
             }
         })
     }
+
+
 
     fun addDepartment(title: String, headId: Int) {
         val newDepartment = Department(id = 0, title = title, head_of_department = headId)

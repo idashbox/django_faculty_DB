@@ -50,9 +50,10 @@ class EditDepartmentActivity : AppCompatActivity() {
                 setResult(RESULT_OK)
                 finish()
             } else {
-                // Handle error
+                // Покажите сообщение об ошибке, если необходимо
             }
         })
+
 
         val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)

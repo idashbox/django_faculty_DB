@@ -34,21 +34,7 @@ class UserListActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        adapter = UserAdapter(
-            viewModel = userViewModel,
-            onEditClick = { user ->
-                val intent = Intent(this, EditUserActivity::class.java).apply {
-                    putExtra("USER_ID", user.id)
-                    putExtra("USER_NAME", user.name)
-                    putExtra("USER_EMAIL", user.email)
-                    putExtra("USER_LOGIN", user.login)
-                    putExtra("USER_SURNAME", user.surname)
-                    putExtra("USER_MIDDLE_NAME", user.middle_name)
-                    putExtra("USER_BIRTHDAY", user.birthday)
-                }
-                startActivity(intent)
-            }
-        )
+        adapter = UserAdapter(userViewModel)
         recyclerView.adapter = adapter
 
         findViewById<Button>(R.id.button_add_user).setOnClickListener {
@@ -71,8 +57,9 @@ class UserListActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 1 && resultCode == RESULT_OK) {
+        if ((requestCode == 1 || requestCode == 2) && resultCode == RESULT_OK) {
             userViewModel.fetchUsers()
         }
     }
+
 }

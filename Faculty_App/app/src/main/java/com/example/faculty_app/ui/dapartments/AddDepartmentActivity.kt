@@ -38,14 +38,15 @@ class AddDepartmentActivity : AppCompatActivity() {
             departmentViewModel.addDepartment(title, headId)
         }
 
-        departmentViewModel.isDepartmentAdded.observe(this, Observer { isAdded ->
-            if (isAdded) {
+        departmentViewModel.isDepartmentUpdated.observe(this, Observer { isUpdated ->
+            if (isUpdated) {
                 setResult(RESULT_OK)
                 finish()
             } else {
-                // Show error message
+                // Покажите сообщение об ошибке, если необходимо
             }
         })
+
 
         val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)

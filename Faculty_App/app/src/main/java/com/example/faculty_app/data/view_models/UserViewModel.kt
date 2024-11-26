@@ -25,7 +25,8 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
         userRepository.getUsers().enqueue(object : Callback<List<User>> {
             override fun onResponse(call: Call<List<User>>, response: Response<List<User>>) {
                 if (response.isSuccessful) {
-                    _users.postValue(response.body())
+                    val sortedList = response.body()?.sortedBy { it.id } ?: emptyList()
+                    _users.postValue(sortedList)
                 }
             }
 

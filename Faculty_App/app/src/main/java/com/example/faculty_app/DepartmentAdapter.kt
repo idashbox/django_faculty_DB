@@ -1,5 +1,6 @@
 package com.example.faculty_app
 
+import android.app.Activity
 import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
@@ -40,13 +41,12 @@ class DepartmentAdapter(private val viewModel: DepartmentViewModel) : ListAdapte
 
             // Обработчик для кнопки редактирования
             editButton.setOnClickListener {
-                Log.d("DepartmentAdapter", "Edit button clicked for department: ${department.title}")
                 val intent = Intent(itemView.context, EditDepartmentActivity::class.java).apply {
                     putExtra("DEPARTMENT_ID", department.id)
                     putExtra("DEPARTMENT_TITLE", department.title)
                     putExtra("DEPARTMENT_HEAD_ID", department.head_of_department)
                 }
-                itemView.context.startActivity(intent)
+                (itemView.context as Activity).startActivityForResult(intent, 2)
             }
 
             // Обработчик для кнопки удаления

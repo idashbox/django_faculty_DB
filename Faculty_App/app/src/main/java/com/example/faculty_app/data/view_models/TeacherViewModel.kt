@@ -25,7 +25,8 @@ class TeacherViewModel(private val teacherRepository: TeacherRepository) : ViewM
         teacherRepository.getTeachers().enqueue(object : Callback<List<Teacher>> {
             override fun onResponse(call: Call<List<Teacher>>, response: Response<List<Teacher>>) {
                 if (response.isSuccessful) {
-                    _teachers.postValue(response.body())
+                    val sortedList = response.body()?.sortedBy { it.id } ?: emptyList()
+                    _teachers.postValue(sortedList)
                 }
             }
 
