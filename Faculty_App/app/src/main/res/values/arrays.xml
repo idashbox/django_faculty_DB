@@ -1,0 +1,7 @@
+<resources>
+    <string-array name="roles">
+        <item>Студент</item>
+        <item>Преподаватель</item>
+        <item>Админ</item>
+    </string-array>
+</resources>
