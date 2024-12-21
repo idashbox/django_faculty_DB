@@ -56,7 +56,7 @@ class Teacher(models.Model):
     year_of_start_of_work = models.CharField(max_length=100)
 
     def __str__(self):
-        return f"{self.user.name} -{self.user.middle_name} - {self.user.surname}"
+        return f"{self.user.surname} {self.user.name} {self.user.middle_name}".strip()
 
 
 class Discipline(models.Model):
@@ -78,10 +78,18 @@ class UserToGroup(models.Model):
     def __str__(self):
         return f"{self.user.name} - {self.group.course} - {self.group.number}"
 
-#python manage.py flush
-#python manage.py create_test_data
-#python manage.py makemigrations
-#python manage.py migrate
+from django.db.models import Count
 
-
-
+class TeacherStatistics(models.Model):
+    @staticmethod
+    def get_statistics():
+        most_popular_department = (
+            Department.objects.annotate(teacher_count=Count('teachers'))
+            .order_by('-teacher_count')
+            .first()
+        )
+        total_records = Teacher.objects.count()
+        return {
+            "total_records": total_records,
+            "most_popular_department": most_popular_department.title if most_popular_department else None,
+        }

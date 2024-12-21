@@ -4,10 +4,11 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.faculty_app.data.models.Teacher
+import com.example.faculty_app.data.models.TeacherStatistics
 import com.example.faculty_app.data.repositories.TeacherRepository
-import retrofit2.Call
-import retrofit2.Callback
+import kotlinx.coroutines.launch
 import retrofit2.Response
 
 class TeacherViewModel(private val teacherRepository: TeacherRepository) : ViewModel() {
@@ -21,65 +22,110 @@ class TeacherViewModel(private val teacherRepository: TeacherRepository) : ViewM
     private val _isTeacherUpdated = MutableLiveData<Boolean>()
     val isTeacherUpdated: LiveData<Boolean> get() = _isTeacherUpdated
 
-    fun fetchTeachers() {
-        teacherRepository.getTeachers().enqueue(object : Callback<List<Teacher>> {
-            override fun onResponse(call: Call<List<Teacher>>, response: Response<List<Teacher>>) {
-                if (response.isSuccessful) {
-                    val sortedList = response.body()?.sortedBy { it.id } ?: emptyList()
-                    _teachers.postValue(sortedList)
-                }
-            }
+    private val _statistics = MutableLiveData<TeacherStatistics>()
+    val statistics: LiveData<TeacherStatistics> get() = _statistics
 
-            override fun onFailure(call: Call<List<Teacher>>, t: Throwable) {
-                // Handle failure
-                Log.e("TeacherViewModel", "Failed to fetch teachers: ${t.message}")
+    private var _currentPage = 1
+    val currentPage: Int get() = _currentPage
+
+    private val _pageSize = MutableLiveData<Int>()
+    val pageSize: LiveData<Int> get() = _pageSize
+
+    init {
+        _pageSize.value = 10
+        fetchTeachers(orderBy = "id")
+        fetchStatistics()
+    }
+
+    fun fetchTeachers(
+        nameFilter: String? = null,
+        departmentFilter: Int? = null,
+        orderBy: String? = null
+    ) {
+        viewModelScope.launch {
+            try {
+                val response = teacherRepository.getTeachers(
+                    _currentPage,
+                    _pageSize.value ?: 10,
+                    nameFilter,
+                    departmentFilter,
+                    orderBy
+                )
+                if (response.isSuccessful) {
+                    val teacherResponse = response.body()
+                    _teachers.postValue(teacherResponse?.results ?: emptyList())
+                } else {
+                    Log.e("TeacherViewModel", "Failed to fetch teachers: ${response.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                Log.e("TeacherViewModel", "Exception occurred: ${e.message}")
             }
-        })
+        }
     }
 
     fun addTeacher(teacher: Teacher) {
-        teacherRepository.createTeacher(teacher).enqueue(object : Callback<Teacher> {
-            override fun onResponse(call: Call<Teacher>, response: Response<Teacher>) {
+        viewModelScope.launch {
+            try {
+                val response = teacherRepository.createTeacher(teacher)
                 _isTeacherAdded.postValue(response.isSuccessful)
-                fetchTeachers()
+                fetchTeachers(orderBy = "id")
+            } catch (e: Exception) {
+                Log.e("TeacherViewModel", "Exception occurred: ${e.message}")
             }
-
-            override fun onFailure(call: Call<Teacher>, t: Throwable) {
-                _isTeacherAdded.postValue(false)
-                Log.e("TeacherViewModel", "Failed to add teacher: ${t.message}")
-            }
-        })
+        }
     }
 
     fun updateTeacher(teacherId: Int, teacher: Teacher) {
-        teacherRepository.updateTeacher(teacherId, teacher).enqueue(object : Callback<Teacher> {
-            override fun onResponse(call: Call<Teacher>, response: Response<Teacher>) {
+        viewModelScope.launch {
+            try {
+                val response = teacherRepository.updateTeacher(teacherId, teacher)
                 _isTeacherUpdated.postValue(response.isSuccessful)
-                fetchTeachers()
+                fetchTeachers(orderBy = "id")
+            } catch (e: Exception) {
+                Log.e("TeacherViewModel", "Exception occurred: ${e.message}")
             }
-
-            override fun onFailure(call: Call<Teacher>, t: Throwable) {
-                _isTeacherUpdated.postValue(false)
-                Log.e("TeacherViewModel", "Failed to update teacher: ${t.message}")
-            }
-        })
+        }
     }
 
     fun deleteTeacher(teacherId: Int) {
-        teacherRepository.deleteTeacher(teacherId).enqueue(object : Callback<Void> {
-            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+        viewModelScope.launch {
+            try {
+                val response = teacherRepository.deleteTeacher(teacherId)
                 if (response.isSuccessful) {
-                    fetchTeachers()
+                    fetchTeachers(orderBy = "id")
+                } else {
+                    Log.e("TeacherViewModel", "Failed to delete teacher: ${response.errorBody()?.string()}")
                 }
+            } catch (e: Exception) {
+                Log.e("TeacherViewModel", "Exception occurred: ${e.message}")
             }
+        }
+    }
 
-            override fun onFailure(call: Call<Void>, t: Throwable) {
-                // Handle failure
-                Log.e("TeacherViewModel", "Failed to delete teacher: ${t.message}")
+    fun nextPage() {
+        _currentPage++
+        fetchTeachers(orderBy = "id")
+    }
+
+    fun previousPage() {
+        if (_currentPage > 1) {
+            _currentPage--
+            fetchTeachers(orderBy = "id")
+        }
+    }
+
+    private fun fetchStatistics() {
+        viewModelScope.launch {
+            try {
+                val response = teacherRepository.getStatistics()
+                if (response.isSuccessful) {
+                    _statistics.postValue(response.body())
+                } else {
+                    Log.e("TeacherViewModel", "Failed to fetch statistics: ${response.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                Log.e("TeacherViewModel", "Exception occurred: ${e.message}")
             }
-        })
+        }
     }
 }
-
-
-

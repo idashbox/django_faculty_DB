@@ -1,42 +1,44 @@
 package com.example.faculty_app.data.repositories
 
-import com.example.faculty_app.data.network.ApiService
-import com.example.faculty_app.data.network.RetrofitClient.retrofit
 import com.example.faculty_app.data.models.Teacher
-import retrofit2.Call
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import com.example.faculty_app.data.models.TeacherResponse
+import com.example.faculty_app.data.models.TeacherStatistics
+import com.example.faculty_app.data.network.ApiService
+import com.example.faculty_app.data.network.RetrofitClient
+import retrofit2.Response
 
 class TeacherRepository {
 
-    private val apiService: ApiService
-    init {
+    private val apiService: ApiService = RetrofitClient.apiService
 
-        apiService = retrofit.create(ApiService::class.java)
+    suspend fun getTeachers(
+        page: Int,
+        pageSize: Int,
+        name: String? = null,
+        department: Int? = null,
+        orderBy: String? = null
+    ): Response<TeacherResponse> {
+        return apiService.getTeachers(page, pageSize, name, department, orderBy)
     }
 
-    // Получение всех преподавателей
-    fun getTeachers(): Call<List<Teacher>> {
-        return apiService.getTeachers()
-    }
 
-    // Получение одного преподавателя по id
-    fun getTeacher(id: Int): Call<Teacher> {
+    suspend fun getTeacher(id: Int): Response<Teacher> {
         return apiService.getTeacher(id)
     }
 
-    // Создание нового преподавателя
-    fun createTeacher(teacher: Teacher): Call<Teacher> {
+    suspend fun createTeacher(teacher: Teacher): Response<Teacher> {
         return apiService.createTeacher(teacher)
     }
 
-    // Обновление информации о преподавателе
-    fun updateTeacher(id: Int, teacher: Teacher): Call<Teacher> {
+    suspend fun updateTeacher(id: Int, teacher: Teacher): Response<Teacher> {
         return apiService.updateTeacher(id, teacher)
     }
 
-    // Удаление преподавателя
-    fun deleteTeacher(id: Int): Call<Void> {
+    suspend fun deleteTeacher(id: Int): Response<Void> {
         return apiService.deleteTeacher(id)
+    }
+
+    suspend fun getStatistics(): Response<TeacherStatistics> {
+        return apiService.getStatistics()
     }
 }

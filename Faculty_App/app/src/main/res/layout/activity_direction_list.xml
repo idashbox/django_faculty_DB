@@ -18,7 +18,7 @@
             android:background="#B34DBA29"
             android:theme="@style/ThemeOverlay.MaterialComponents.ActionBar"
             app:navigationIcon="@drawable/ic_arrow_back"
-            app:title="Кафедры"
+            app:title="Направления обучения"
             app:titleTextColor="#852E2C1B" />
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -29,27 +29,16 @@
         android:padding="16dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <!-- Поле для поиска -->
-<!--        <EditText-->
-<!--            android:id="@+id/editTextSearch"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:hint="Введите название кафедры"-->
-<!--            android:padding="8dp"-->
-<!--            android:inputType="text"-->
-<!--            android:layout_marginBottom="16dp" />-->
-
-        <!-- Кнопка добавления новой кафедры -->
         <Button
-            android:id="@+id/button_add_department"
+            android:id="@+id/button_add_direction"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Добавить новую кафедру"
+            android:text="Добавить новое направление"
             android:backgroundTint="#B34DBA29"
             android:textColor="@android:color/white"
             android:layout_marginBottom="16dp" />
 
-        <!-- RecyclerView для списка кафедр -->
+        <!-- RecyclerView -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"

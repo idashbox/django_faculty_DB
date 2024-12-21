@@ -2,7 +2,10 @@ package com.example.faculty_app.data.views
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.AdapterView
 import android.widget.Button
+import android.widget.EditText
+import android.widget.Spinner
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -20,6 +23,11 @@ class TeacherListActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: TeacherAdapter
+    private lateinit var editTextSearch: EditText
+    private lateinit var spinnerDepartmentFilter: Spinner
+    private lateinit var buttonPreviousPage: Button
+    private lateinit var buttonNextPage: Button
+    private lateinit var buttonSearch: Button
     private val teacherRepository: TeacherRepository by lazy {
         TeacherRepository()
     }
@@ -37,7 +45,14 @@ class TeacherListActivity : AppCompatActivity() {
         adapter = TeacherAdapter(teacherViewModel)
         recyclerView.adapter = adapter
 
-        findViewById<Button>(R.id.button_add_teacher).setOnClickListener {
+        editTextSearch = findViewById(R.id.editTextSearch)
+        spinnerDepartmentFilter = findViewById(R.id.spinnerDepartmentFilter)
+        buttonPreviousPage = findViewById(R.id.buttonPreviousPage)
+        buttonNextPage = findViewById(R.id.buttonNextPage)
+        buttonSearch = findViewById(R.id.buttonSearch)
+
+        val buttonAddTeacher: Button = findViewById(R.id.button_add_teacher)
+        buttonAddTeacher.setOnClickListener {
             startActivityForResult(Intent(this, AddTeacherActivity::class.java), 1)
         }
 
@@ -52,7 +67,31 @@ class TeacherListActivity : AppCompatActivity() {
             adapter.submitList(it)
         })
 
-        teacherViewModel.fetchTeachers()
+        teacherViewModel.statistics.observe(this, Observer { statistics ->
+            // Обработка статистики
+        })
+
+        buttonSearch.setOnClickListener {
+            val searchQuery = editTextSearch.text.toString()
+            teacherViewModel.fetchTeachers(nameFilter = searchQuery)
+        }
+
+        spinnerDepartmentFilter.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parentView: AdapterView<*>, view: android.view.View, position: Int, id: Long) {
+                val selectedDepartmentId = parentView.getItemAtPosition(position) as? Int
+                teacherViewModel.fetchTeachers(departmentFilter = selectedDepartmentId)
+            }
+
+            override fun onNothingSelected(parentView: AdapterView<*>) {}
+        })
+
+        buttonPreviousPage.setOnClickListener {
+            teacherViewModel.previousPage()
+        }
+
+        buttonNextPage.setOnClickListener {
+            teacherViewModel.nextPage()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -61,5 +100,4 @@ class TeacherListActivity : AppCompatActivity() {
             teacherViewModel.fetchTeachers()
         }
     }
-
 }

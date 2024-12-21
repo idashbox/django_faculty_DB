@@ -165,18 +165,40 @@ class EditTeacherActivity : AppCompatActivity() {
         })
     }
 
+    private fun updateBirthdayEditText() {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        birthdayEditText.setText(dateFormat.format(selectedBirthday.time))
+    }
     private fun updateTeacher() {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val formattedBirthday = dateFormat.format(selectedBirthday.time)
 
+        val name = nameEditText.text.toString().trim()
+        val surname = surnameEditText.text.toString().trim()
+        val middleName = middleNameEditText.text.toString().trim()
+        val email = emailEditText.text.toString().trim()
+        val login = loginEditText.text.toString().trim()
+        val password = passwordEditText.text.toString().trim()
+        val yearsOfWork = yearsOfWorkEditText.text.toString().trim()
+
+        if (name.isEmpty() || surname.isEmpty() || middleName.isEmpty() || email.isEmpty() || login.isEmpty() || password.isEmpty() || yearsOfWork.isEmpty()) {
+            Log.e("EditTeacherActivity", "All fields must be filled!")
+            return
+        }
+
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Log.e("EditTeacherActivity", "Invalid email address!")
+            return
+        }
+
         val updatedUser = User(
             id = userId,
-            name = nameEditText.text.toString(),
-            email = emailEditText.text.toString() + "d",
-            login = loginEditText.text.toString(),
-            password = passwordEditText.text.toString(),
-            surname = surnameEditText.text.toString(),
-            middle_name = middleNameEditText.text.toString(),
+            name = name,
+            email = email,
+            login = login,
+            password = password,
+            surname = surname,
+            middle_name = middleName,
             birthday = formattedBirthday,
             sex = if (genderRadioGroup.checkedRadioButtonId == R.id.radioButtonMale) "Male" else "Female",
             role = "teacher"
@@ -186,51 +208,11 @@ class EditTeacherActivity : AppCompatActivity() {
             id = teacherId,
             user = updatedUser,
             department = selectedDepartmentId,
-            year_of_start_of_work = yearsOfWorkEditText.text.toString()
+            year_of_start_of_work = yearsOfWork
         )
-
-        Log.d("EditTeacherActivity", "Updating teacher: $teacherUpdateRequest")
-
-        if (teacherUpdateRequest.year_of_start_of_work.isEmpty()) {
-            Log.e("EditTeacherActivity", "Year of work cannot be empty!")
-            return
-        }
 
         teacherViewModel.updateTeacher(teacherId, teacherUpdateRequest)
-
-        val updatedUserNew = User(
-            id = userId,
-            name = nameEditText.text.toString(),
-            email = emailEditText.text.toString(),
-            login = loginEditText.text.toString(),
-            password = passwordEditText.text.toString(),
-            surname = surnameEditText.text.toString(),
-            middle_name = middleNameEditText.text.toString(),
-            birthday = formattedBirthday,
-            sex = if (genderRadioGroup.checkedRadioButtonId == R.id.radioButtonMale) "Male" else "Female",
-            role = "teacher"
-        )
-
-        val teacherUpdateRequestNew = Teacher(
-            id = teacherId,
-            user = updatedUserNew,
-            department = selectedDepartmentId,
-            year_of_start_of_work = yearsOfWorkEditText.text.toString()
-        )
-
-        Log.d("EditTeacherActivity", "Updating teacher: $teacherUpdateRequest")
-
-        if (teacherUpdateRequest.year_of_start_of_work.isEmpty()) {
-            Log.e("EditTeacherActivity", "Year of work cannot be empty!")
-            return
-        }
-
-        teacherViewModel.updateTeacher(teacherId, teacherUpdateRequestNew)
     }
 
-    private fun updateBirthdayEditText() {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        birthdayEditText.setText(dateFormat.format(selectedBirthday.time))
-    }
 }
 

@@ -2,8 +2,11 @@ package com.example.faculty_app.data.views
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.widget.Button
+import android.widget.EditText
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -20,6 +23,7 @@ class DepartmentListActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: DepartmentAdapter
+//    private lateinit var searchEditText: EditText
     private val departmentRepository: DepartmentRepository by lazy {
         DepartmentRepository()
     }
@@ -36,6 +40,23 @@ class DepartmentListActivity : AppCompatActivity() {
 
         adapter = DepartmentAdapter(departmentViewModel)
         recyclerView.adapter = adapter
+
+//        searchEditText = findViewById(R.id.editTextSearch)
+//
+//        searchEditText.addTextChangedListener(object : TextWatcher {
+//            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+//                // Здесь ничего делать не нужно
+//            }
+//
+//            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+//                // Вызываем фильтрацию, когда пользователь вводит текст
+//                departmentViewModel.filterDepartmentsByName(s.toString())
+//            }
+//
+//            override fun afterTextChanged(s: Editable?) {
+//                // Здесь ничего делать не нужно
+//            }
+//        })
 
         findViewById<Button>(R.id.button_add_department).setOnClickListener {
             startActivityForResult(Intent(this, AddDepartmentActivity::class.java), 1)

@@ -21,6 +21,9 @@ class DepartmentViewModel(private val departmentRepository: DepartmentRepository
     private val _isDepartmentUpdated = MutableLiveData<Boolean>()
     val isDepartmentUpdated: LiveData<Boolean> get() = _isDepartmentUpdated
 
+    private val _filteredDepartments = MutableLiveData<List<Department>>()
+    val filteredDepartments: LiveData<List<Department>> get() = _filteredDepartments
+
     fun fetchDepartments() {
         departmentRepository.getDepartments().enqueue(object : Callback<List<Department>> {
             override fun onResponse(call: Call<List<Department>>, response: Response<List<Department>>) {
@@ -92,5 +95,16 @@ class DepartmentViewModel(private val departmentRepository: DepartmentRepository
                 Log.e("DepartmentViewModel", "Failed to delete department: ${t.message}")
             }
         })
+    }
+
+    fun filterDepartmentsByName(query: String) {
+        val currentList = _departments.value ?: emptyList()
+        _filteredDepartments.postValue(
+            if (query.isNotEmpty()) {
+                currentList.filter { it.title.contains(query, ignoreCase = true) }
+            } else {
+                currentList
+            }
+        )
     }
 }

@@ -29,6 +29,25 @@
         android:padding="16dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+        <!-- Фильтры -->
+        <EditText
+            android:id="@+id/editTextSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Поиск по имени" />
+
+        <Button
+            android:id="@+id/buttonSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Поиск" />
+
+        <Spinner
+            android:id="@+id/spinnerDepartmentFilter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Фильтр по кафедре" />
+
         <Button
             android:id="@+id/button_add_teacher"
             android:layout_width="match_parent"
@@ -44,5 +63,25 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1" />
+
+        <!-- Постраничный вывод -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/buttonPreviousPage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Предыдущая" />
+
+            <Button
+                android:id="@+id/buttonNextPage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Следующая" />
+        </LinearLayout>
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
