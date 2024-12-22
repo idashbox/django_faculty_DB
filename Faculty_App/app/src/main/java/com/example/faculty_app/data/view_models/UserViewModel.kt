@@ -4,10 +4,10 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.faculty_app.data.models.User
 import com.example.faculty_app.data.repositories.UserRepository
-import retrofit2.Call
-import retrofit2.Callback
+import kotlinx.coroutines.launch
 import retrofit2.Response
 
 class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
@@ -21,62 +21,89 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
     private val _isUserUpdated = MutableLiveData<Boolean>()
     val isUserUpdated: LiveData<Boolean> get() = _isUserUpdated
 
-    fun fetchUsers() {
-        userRepository.getUsers().enqueue(object : Callback<List<User>> {
-            override fun onResponse(call: Call<List<User>>, response: Response<List<User>>) {
-                if (response.isSuccessful) {
-                    val sortedList = response.body()?.sortedBy { it.id } ?: emptyList()
-                    _users.postValue(sortedList)
-                }
-            }
+    private var _currentPage = 1
+    val currentPage: Int get() = _currentPage
 
-            override fun onFailure(call: Call<List<User>>, t: Throwable) {
-                // Handle failure
-                Log.e("UserViewModel", "Failed to fetch users: ${t.message}")
+    private val _pageSize = MutableLiveData<Int>()
+    val pageSize: LiveData<Int> get() = _pageSize
+
+    init {
+        _pageSize.value = 10
+        fetchUsers(orderBy = "id")
+    }
+
+    fun fetchUsers(
+        nameFilter: String? = null,
+        orderBy: String? = null
+    ) {
+        viewModelScope.launch {
+            try {
+                val response = userRepository.getUsers(
+                    _currentPage,
+                    _pageSize.value ?: 10,
+                    nameFilter,
+                    orderBy
+                )
+                if (response.isSuccessful) {
+                    val userResponse = response.body()
+                    _users.postValue(userResponse?.results ?: emptyList())
+                } else {
+                    Log.e("UserViewModel", "Failed to fetch users: ${response.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                Log.e("UserViewModel", "Exception occurred: ${e.message}")
             }
-        })
+        }
     }
 
     fun addUser(user: User) {
-        userRepository.createUser(user).enqueue(object : Callback<User> {
-            override fun onResponse(call: Call<User>, response: Response<User>) {
+        viewModelScope.launch {
+            try {
+                val response = userRepository.createUser(user)
                 _isUserAdded.postValue(response.isSuccessful)
-                fetchUsers()
+                fetchUsers(orderBy = "id")
+            } catch (e: Exception) {
+                Log.e("UserViewModel", "Exception occurred: ${e.message}")
             }
-
-            override fun onFailure(call: Call<User>, t: Throwable) {
-                _isUserAdded.postValue(false)
-                Log.e("UserViewModel", "Failed to add user: ${t.message}")
-            }
-        })
+        }
     }
 
     fun updateUser(userId: Int, user: User) {
-        userRepository.updateUser(userId, user).enqueue(object : Callback<User> {
-            override fun onResponse(call: Call<User>, response: Response<User>) {
+        viewModelScope.launch {
+            try {
+                val response = userRepository.updateUser(userId, user)
                 _isUserUpdated.postValue(response.isSuccessful)
-                fetchUsers()
+                fetchUsers(orderBy = "id")
+            } catch (e: Exception) {
+                Log.e("UserViewModel", "Exception occurred: ${e.message}")
             }
-
-            override fun onFailure(call: Call<User>, t: Throwable) {
-                _isUserUpdated.postValue(false)
-                Log.e("UserViewModel", "Failed to update user: ${t.message}")
-            }
-        })
+        }
     }
 
     fun deleteUser(userId: Int) {
-        userRepository.deleteUser(userId).enqueue(object : Callback<Void> {
-            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+        viewModelScope.launch {
+            try {
+                val response = userRepository.deleteUser(userId)
                 if (response.isSuccessful) {
-                    fetchUsers()
+                    fetchUsers(orderBy = "id")
+                } else {
+                    Log.e("UserViewModel", "Failed to delete user: ${response.errorBody()?.string()}")
                 }
+            } catch (e: Exception) {
+                Log.e("UserViewModel", "Exception occurred: ${e.message}")
             }
+        }
+    }
 
-            override fun onFailure(call: Call<Void>, t: Throwable) {
-                // Handle failure
-                Log.e("UserViewModel", "Failed to delete user: ${t.message}")
-            }
-        })
+    fun nextPage() {
+        _currentPage++
+        fetchUsers(orderBy = "id")
+    }
+
+    fun previousPage() {
+        if (_currentPage > 1) {
+            _currentPage--
+            fetchUsers(orderBy = "id")
+        }
     }
 }

@@ -1,9 +1,11 @@
 package com.example.faculty_app.data.repositories
 
+import com.example.faculty_app.data.models.DepartmentResponse
 import com.example.faculty_app.data.network.ApiService
 import com.example.faculty_app.data.network.RetrofitClient.retrofit
 import com.example.faculty_app.data.models.Direction
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -32,5 +34,14 @@ class DirectionRepository {
 
     fun deleteDirection(id: Int): Call<Void> {
         return apiService.deleteDirection(id)
+    }
+
+    suspend fun getDepartments(
+        page: Int,
+        pageSize: Int,
+        name: String? = null,
+        orderBy: String? = null
+    ): Response<DepartmentResponse> {
+        return apiService.getDepartments(page, pageSize, name, orderBy)
     }
 }

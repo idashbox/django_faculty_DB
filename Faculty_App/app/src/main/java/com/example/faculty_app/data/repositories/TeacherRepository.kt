@@ -1,5 +1,6 @@
 package com.example.faculty_app.data.repositories
 
+import com.example.faculty_app.data.models.DepartmentResponse
 import com.example.faculty_app.data.models.Teacher
 import com.example.faculty_app.data.models.TeacherResponse
 import com.example.faculty_app.data.models.TeacherStatistics
@@ -15,10 +16,13 @@ class TeacherRepository {
         page: Int,
         pageSize: Int,
         name: String? = null,
+        surname: String? = null,
+        middleName: String? = null,
+        birthday: String? = null,
         department: Int? = null,
         orderBy: String? = null
     ): Response<TeacherResponse> {
-        return apiService.getTeachers(page, pageSize, name, department, orderBy)
+        return apiService.getTeachers(page, pageSize, name, surname, middleName, birthday, department, orderBy)
     }
 
 
@@ -40,5 +44,20 @@ class TeacherRepository {
 
     suspend fun getStatistics(): Response<TeacherStatistics> {
         return apiService.getStatistics()
+    }
+    suspend fun getDepartments(
+        page: Int,
+        pageSize: Int,
+        name: String? = null,
+        orderBy: String? = null
+    ): Response<DepartmentResponse> {
+        return apiService.getDepartments(page, pageSize, name, orderBy)
+    }
+    suspend fun searchTeachers(
+        page: Int,
+        pageSize: Int,
+        query: String
+    ): Response<TeacherResponse> {
+        return apiService.searchTeachers(page, pageSize, query)
     }
 }

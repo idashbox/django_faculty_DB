@@ -5,8 +5,11 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.faculty_app.data.models.Department
 import com.example.faculty_app.data.models.Direction
 import com.example.faculty_app.data.repositories.DirectionRepository
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -21,6 +24,9 @@ class DirectionViewModel(private val directionRepository: DirectionRepository) :
 
     private val _isDirectionUpdated = MutableLiveData<Boolean>()
     val isDirectionUpdated: LiveData<Boolean> get() = _isDirectionUpdated
+
+    private val _departments = MutableLiveData<List<Department>>()
+    val departments: LiveData<List<Department>> get() = _departments
 
     fun fetchDirections() {
         directionRepository.getDirections().enqueue(object : Callback<List<Direction>> {
@@ -77,5 +83,21 @@ class DirectionViewModel(private val directionRepository: DirectionRepository) :
                 Log.e("DirectionViewModel", "Failed to delete direction: ${t.message}")
             }
         })
+    }
+
+    fun fetchDepartments() {
+        viewModelScope.launch {
+            try {
+                val response = directionRepository.getDepartments(1, 100)
+                if (response.isSuccessful) {
+                    val departmentResponse = response.body()
+                    _departments.postValue(departmentResponse?.results ?: emptyList())
+                } else {
+                    Log.e("TeacherViewModel", "Failed to fetch departments: ${response.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                Log.e("TeacherViewModel", "Exception occurred: ${e.message}")
+            }
+        }
     }
 }

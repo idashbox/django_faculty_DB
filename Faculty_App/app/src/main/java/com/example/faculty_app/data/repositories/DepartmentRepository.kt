@@ -1,42 +1,38 @@
 package com.example.faculty_app.data.repositories
 
-import com.example.faculty_app.data.network.ApiService
-import com.example.faculty_app.data.network.RetrofitClient.retrofit
+import android.icu.text.CaseMap.Title
 import com.example.faculty_app.data.models.Department
-import retrofit2.Call
+import com.example.faculty_app.data.models.DepartmentResponse
+import com.example.faculty_app.data.network.ApiService
+import com.example.faculty_app.data.network.RetrofitClient
+import retrofit2.Response
 
 class DepartmentRepository {
 
-    private val apiService: ApiService
+    private val apiService: ApiService = RetrofitClient.apiService
 
-    init {
-
-        apiService = retrofit.create(ApiService::class.java)
+    suspend fun getDepartments(
+        page: Int,
+        pageSize: Int,
+        title: String?,
+        orderBy: String? = null
+    ): Response<DepartmentResponse> {
+        return apiService.getDepartments(page, pageSize, title, orderBy)
     }
 
-    // Получение всех кафедр
-    fun getDepartments(): Call<List<Department>> {
-        return apiService.getDepartments()
-    }
-
-    // Получение одной кафедры по id
-    fun getDepartment(id: Int): Call<Department> {
+    suspend fun getDepartment(id: Int): Response<Department> {
         return apiService.getDepartment(id)
     }
 
-    // Создание новой кафедры
-    fun createDepartment(department: Department): Call<Department> {
+    suspend fun createDepartment(department: Department): Response<Department> {
         return apiService.createDepartment(department)
     }
 
-    // Обновление информации о кафедре
-    fun updateDepartment(id: Int, department: Department): Call<Department> {
+    suspend fun updateDepartment(id: Int, department: Department): Response<Department> {
         return apiService.updateDepartment(id, department)
     }
 
-    // Удаление кафедры
-    fun deleteDepartment(id: Int): Call<Void> {
+    suspend fun deleteDepartment(id: Int): Response<Void> {
         return apiService.deleteDepartment(id)
     }
 }
-

@@ -1,12 +1,14 @@
 package com.example.faculty_app.data.network
 
 import com.example.faculty_app.data.models.Department
+import com.example.faculty_app.data.models.DepartmentResponse
 import com.example.faculty_app.data.models.Teacher
 import com.example.faculty_app.data.models.User
 import com.example.faculty_app.data.models.Direction
 import com.example.faculty_app.data.models.Group
 import com.example.faculty_app.data.models.TeacherResponse
 import com.example.faculty_app.data.models.TeacherStatistics
+import com.example.faculty_app.data.models.UserResponse
 import com.example.faculty_app.data.models.UserToGroup
 import retrofit2.Call
 import retrofit2.Response
@@ -23,70 +25,75 @@ interface ApiService {
     suspend fun getTeachers(
         @Query("page") page: Int,
         @Query("pageSize") pageSize: Int,
-        @Query("user/name") name: String? = null,
-        @Query("department") department: Int? = null,
-        @Query("orderBy") orderBy: String? = null
+        @Query("name") name: String?,
+        @Query("surname") surname: String?,
+        @Query("middle_name") middleName: String?,
+        @Query("birthday") birthday: String?,
+        @Query("department") department: Int?,
+        @Query("orderBy") orderBy: String?
     ): Response<TeacherResponse>
 
-    @GET("api/teachers/{id}")
+    @GET("teachers/search/")
+    suspend fun searchTeachers(
+        @Query("page") page: Int,
+        @Query("pageSize") pageSize: Int,
+        @Query("query") query: String
+    ): Response<TeacherResponse>
+
+    @GET("api/teachers/{id}/")
     suspend fun getTeacher(@Path("id") id: Int): Response<Teacher>
 
     @POST("api/teachers/")
     suspend fun createTeacher(@Body teacher: Teacher): Response<Teacher>
 
-    @PUT("api/teachers/{id}")
+    @PUT("api/teachers/{id}/")
     suspend fun updateTeacher(@Path("id") id: Int, @Body teacher: Teacher): Response<Teacher>
 
-    @DELETE("api/teachers/{id}")
+    @DELETE("api/teachers/{id}/")
     suspend fun deleteTeacher(@Path("id") id: Int): Response<Void>
 
     @GET("api/statistics/")
     suspend fun getStatistics(): Response<TeacherStatistics>
 
     @GET("api/users/")
-    fun getUsers(): Call<List<User>>
+    suspend fun getUsers(
+        @Query("page") page: Int,
+        @Query("pageSize") pageSize: Int,
+        @Query("name") name: String? = null,
+        @Query("orderBy") orderBy: String? = null
+    ): Response<UserResponse>
 
     @GET("api/users/{id}/")
-    fun getUser(@Path("id") id: Int): Call<User>
+    suspend fun getUser(@Path("id") id: Int): Response<User>
 
     @POST("api/users/")
-    fun createUser(@Body user: User): Call<User>
+    suspend fun createUser(@Body user: User): Response<User>
 
     @PUT("api/users/{id}/")
-    fun updateUser(@Path("id") id: Int, @Body user: User): Call<User>
+    suspend fun updateUser(@Path("id") id: Int, @Body user: User): Response<User>
 
     @DELETE("api/users/{id}/")
-    fun deleteUser(@Path("id") id: Int): Call<Void>
-
-//    @GET("api/teachers/")
-//    fun getTeachers(): Call<List<Teacher>>
-
-//    @GET("api/teachers/{id}")
-//    fun getTeacher(@Path("id") id: Int): Call<Teacher>
-//
-//    @PUT("api/teachers/{id}/")
-//    fun updateTeacher(@Path("id") id: Int, @Body teacher: Teacher): Call<Teacher>
-//
-//    @POST("api/teachers/")
-//    fun createTeacher(@Body teacher: Teacher): Call<Teacher>
-//
-//    @DELETE("api/teachers/{id}/")
-//    fun deleteTeacher(@Path("id") id: Int): Call<Void>
+    suspend fun deleteUser(@Path("id") id: Int): Response<Void>
 
     @GET("api/departments/{id}/")
-    fun getDepartment(@Path("id") id: Int): Call<Department>
+    suspend fun getDepartment(@Path("id") id: Int): Response<Department>
 
     @GET("api/departments/")
-    fun getDepartments(): Call<List<Department>>
+    suspend fun getDepartments(
+        @Query("page") page: Int,
+        @Query("pageSize") pageSize: Int,
+        @Query("title") title: String? = null,
+        @Query("orderBy") orderBy: String? = null
+    ): Response<DepartmentResponse>
 
     @POST("api/departments/")
-    fun createDepartment(@Body department: Department): Call<Department>
+    suspend fun createDepartment(@Body department: Department): Response<Department>
 
     @DELETE("api/departments/{id}/")
-    fun deleteDepartment(@Path("id") id: Int): Call<Void>
+    suspend fun deleteDepartment(@Path("id") id: Int): Response<Void>
 
     @PUT("api/departments/{id}/")
-    fun updateDepartment(@Path("id") id: Int, @Body department: Department): Call<Department>
+    suspend fun updateDepartment(@Path("id") id: Int, @Body department: Department): Response<Department>
 
     @GET("api/directions/")
     fun getDirections(): Call<List<Direction>>

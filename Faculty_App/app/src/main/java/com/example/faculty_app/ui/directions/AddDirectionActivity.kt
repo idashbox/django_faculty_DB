@@ -49,7 +49,24 @@ class AddDirectionActivity : AppCompatActivity() {
         departmentSpinner = findViewById(R.id.spinnerDepartment)
         saveButton = findViewById(R.id.buttonSave)
 
-        loadDepartments()
+        directionViewModel.fetchDepartments()
+
+        directionViewModel.departments.observe(this, Observer { departments ->
+            val departmentTitles = departments.map { it.title }
+            val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, departmentTitles)
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            departmentSpinner.adapter = adapter
+
+            departmentSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>, view: android.view.View, position: Int, id: Long) {
+                    selectedDepartmentId = departments[position].id
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                    selectedDepartmentId = 0
+                }
+            }
+        })
 
         saveButton.setOnClickListener {
             addDirection()
@@ -70,36 +87,6 @@ class AddDirectionActivity : AppCompatActivity() {
         toolbar.setNavigationOnClickListener {
             onBackPressed()
         }
-    }
-
-    private fun loadDepartments() {
-        RetrofitClient.apiService.getDepartments().enqueue(object : Callback<List<Department>> {
-            override fun onResponse(call: Call<List<Department>>, response: Response<List<Department>>) {
-                if (response.isSuccessful) {
-                    val departments = response.body() ?: emptyList()
-                    val departmentTitles = departments.map { it.title }
-                    val adapter = ArrayAdapter(this@AddDirectionActivity, android.R.layout.simple_spinner_item, departmentTitles)
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                    departmentSpinner.adapter = adapter
-
-                    departmentSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                        override fun onItemSelected(parentView: AdapterView<*>, view: android.view.View, position: Int, id: Long) {
-                            selectedDepartmentId = departments[position].id
-                        }
-
-                        override fun onNothingSelected(parentView: AdapterView<*>) {
-                            selectedDepartmentId = 0
-                        }
-                    }
-                } else {
-                    Log.e("AddDirectionActivity", "Failed to load directions")
-                }
-            }
-
-            override fun onFailure(call: Call<List<Department>>, t: Throwable) {
-                Log.e("AddDirectionActivity", "Error: ${t.message}")
-            }
-        })
     }
 
     private fun addDirection() {

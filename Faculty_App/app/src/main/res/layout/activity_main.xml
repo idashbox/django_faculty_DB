@@ -52,6 +52,30 @@
             android:backgroundTint="#B34DBA29"
             android:textColor="@android:color/white"
             android:layout_marginBottom="16dp" />
+        <Button
+            android:id="@+id/button_user_to_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Список студентов"
+            android:backgroundTint="#B34DBA29"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="16dp" />
+        <Button
+            android:id="@+id/button_groups"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Список групп"
+            android:backgroundTint="#B34DBA29"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="16dp" />
+        <Button
+            android:id="@+id/button_directions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Список направлений обучения"
+            android:backgroundTint="#B34DBA29"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="16dp" />
 
 
     </LinearLayout>

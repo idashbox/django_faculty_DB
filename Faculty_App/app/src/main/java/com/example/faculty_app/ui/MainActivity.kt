@@ -11,8 +11,11 @@ import com.example.faculty_app.UserAdapter
 import com.example.faculty_app.data.network.RetrofitClient
 import com.example.faculty_app.data.models.User
 import com.example.faculty_app.data.views.DepartmentListActivity
+import com.example.faculty_app.data.views.DirectionListActivity
+import com.example.faculty_app.data.views.GroupListActivity
 import com.example.faculty_app.data.views.TeacherListActivity
 import com.example.faculty_app.data.views.UserListActivity
+import com.example.faculty_app.data.views.UserToGroupListActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -36,29 +39,14 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.button_departments).setOnClickListener {
             startActivity(Intent(this, DepartmentListActivity::class.java))
         }
-    }
-
-    private fun fetchUsers() {
-        RetrofitClient.apiService.getUsers().enqueue(object : Callback<List<User>> {
-            override fun onResponse(call: Call<List<User>>, response: Response<List<User>>) {
-                if (response.isSuccessful) {
-                    val users = response.body()
-                    if (users != null) {
-                        adapter.submitList(users)
-                        Log.d("MainActivity", "Users: $users")
-                    }
-                } else {
-                    // Логирование кода ответа и тела ответа
-                    Log.e("MainActivity", "Response failed: ${response.code()} ${response.message()}")
-                    response.errorBody()?.let {
-                        Log.e("MainActivity", "Error body: ${it.string()}")
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<List<User>>, t: Throwable) {
-                Log.e("MainActivity", "Error: ${t.message}")
-            }
-        })
+        findViewById<Button>(R.id.button_user_to_group).setOnClickListener {
+            startActivity(Intent(this, UserToGroupListActivity::class.java))
+        }
+        findViewById<Button>(R.id.button_groups).setOnClickListener {
+            startActivity(Intent(this, GroupListActivity::class.java))
+        }
+        findViewById<Button>(R.id.button_directions).setOnClickListener {
+            startActivity(Intent(this, DirectionListActivity::class.java))
+        }
     }
 }

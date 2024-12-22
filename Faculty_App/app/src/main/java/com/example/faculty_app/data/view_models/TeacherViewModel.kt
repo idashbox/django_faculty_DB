@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.faculty_app.data.models.Department
 import com.example.faculty_app.data.models.Teacher
 import com.example.faculty_app.data.models.TeacherStatistics
 import com.example.faculty_app.data.repositories.TeacherRepository
@@ -25,6 +26,9 @@ class TeacherViewModel(private val teacherRepository: TeacherRepository) : ViewM
     private val _statistics = MutableLiveData<TeacherStatistics>()
     val statistics: LiveData<TeacherStatistics> get() = _statistics
 
+    private val _departments = MutableLiveData<List<Department>>()
+    val departments: LiveData<List<Department>> get() = _departments
+
     private var _currentPage = 1
     val currentPage: Int get() = _currentPage
 
@@ -39,6 +43,9 @@ class TeacherViewModel(private val teacherRepository: TeacherRepository) : ViewM
 
     fun fetchTeachers(
         nameFilter: String? = null,
+        surnameFilter: String? = null,
+        middleNameFilter: String? = null,
+        birthdayFilter: String? = null,
         departmentFilter: Int? = null,
         orderBy: String? = null
     ) {
@@ -48,6 +55,9 @@ class TeacherViewModel(private val teacherRepository: TeacherRepository) : ViewM
                     _currentPage,
                     _pageSize.value ?: 10,
                     nameFilter,
+                    surnameFilter,
+                    middleNameFilter,
+                    birthdayFilter,
                     departmentFilter,
                     orderBy
                 )
@@ -122,6 +132,42 @@ class TeacherViewModel(private val teacherRepository: TeacherRepository) : ViewM
                     _statistics.postValue(response.body())
                 } else {
                     Log.e("TeacherViewModel", "Failed to fetch statistics: ${response.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                Log.e("TeacherViewModel", "Exception occurred: ${e.message}")
+            }
+        }
+    }
+
+    fun searchTeachers(query: String) {
+        viewModelScope.launch {
+            try {
+                val response = teacherRepository.searchTeachers(
+                    _currentPage,
+                    _pageSize.value ?: 10,
+                    query
+                )
+                if (response.isSuccessful) {
+                    val teacherResponse = response.body()
+                    _teachers.postValue(teacherResponse?.results ?: emptyList())
+                } else {
+                    Log.e("TeacherViewModel", "Failed to search teachers: ${response.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                Log.e("TeacherViewModel", "Exception occurred: ${e.message}")
+            }
+        }
+    }
+
+    fun fetchDepartments() {
+        viewModelScope.launch {
+            try {
+                val response = teacherRepository.getDepartments(1, 100)
+                if (response.isSuccessful) {
+                    val departmentResponse = response.body()
+                    _departments.postValue(departmentResponse?.results ?: emptyList())
+                } else {
+                    Log.e("TeacherViewModel", "Failed to fetch departments: ${response.errorBody()?.string()}")
                 }
             } catch (e: Exception) {
                 Log.e("TeacherViewModel", "Exception occurred: ${e.message}")

@@ -34,19 +34,19 @@
             android:id="@+id/editTextSearch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Поиск по имени" />
+            android:hint="Поиск" />
+
+        <Spinner
+            android:id="@+id/spinnerFilter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Выберите фильтр" />
 
         <Button
             android:id="@+id/buttonSearch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Поиск" />
-
-        <Spinner
-            android:id="@+id/spinnerDepartmentFilter"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Фильтр по кафедре" />
 
         <Button
             android:id="@+id/button_add_teacher"

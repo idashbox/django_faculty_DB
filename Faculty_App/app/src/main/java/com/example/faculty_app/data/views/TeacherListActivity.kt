@@ -3,6 +3,7 @@ package com.example.faculty_app.data.views
 import android.content.Intent
 import android.os.Bundle
 import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
@@ -25,6 +26,7 @@ class TeacherListActivity : AppCompatActivity() {
     private lateinit var adapter: TeacherAdapter
     private lateinit var editTextSearch: EditText
     private lateinit var spinnerDepartmentFilter: Spinner
+    private lateinit var spinnerFilter: Spinner
     private lateinit var buttonPreviousPage: Button
     private lateinit var buttonNextPage: Button
     private lateinit var buttonSearch: Button
@@ -46,10 +48,15 @@ class TeacherListActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
 
         editTextSearch = findViewById(R.id.editTextSearch)
-        spinnerDepartmentFilter = findViewById(R.id.spinnerDepartmentFilter)
+        spinnerFilter = findViewById(R.id.spinnerFilter)
         buttonPreviousPage = findViewById(R.id.buttonPreviousPage)
         buttonNextPage = findViewById(R.id.buttonNextPage)
         buttonSearch = findViewById(R.id.buttonSearch)
+
+        val filterOptions = arrayOf("Имя", "Фамилия", "Отчество", "Дата рождения")
+        val filterAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, filterOptions)
+        filterAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerFilter.adapter = filterAdapter
 
         val buttonAddTeacher: Button = findViewById(R.id.button_add_teacher)
         buttonAddTeacher.setOnClickListener {
@@ -71,19 +78,20 @@ class TeacherListActivity : AppCompatActivity() {
             // Обработка статистики
         })
 
-        buttonSearch.setOnClickListener {
-            val searchQuery = editTextSearch.text.toString()
-            teacherViewModel.fetchTeachers(nameFilter = searchQuery)
-        }
-
-        spinnerDepartmentFilter.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+        spinnerFilter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parentView: AdapterView<*>, view: android.view.View, position: Int, id: Long) {
-                val selectedDepartmentId = parentView.getItemAtPosition(position) as? Int
-                teacherViewModel.fetchTeachers(departmentFilter = selectedDepartmentId)
+                val selectedFilter = filterOptions[position]
+                when (selectedFilter) {
+                    "Имя" -> teacherViewModel.fetchTeachers(orderBy = "user__name")
+                    "Фамилия" -> teacherViewModel.fetchTeachers(orderBy = "user__surname")
+                    "Отчество" -> teacherViewModel.fetchTeachers(orderBy = "user__middle_name")
+                    "Дата рождения" -> teacherViewModel.fetchTeachers(orderBy = "user__birthday")
+                }
+                teacherViewModel.fetchTeachers()
             }
 
             override fun onNothingSelected(parentView: AdapterView<*>) {}
-        })
+        }
 
         buttonPreviousPage.setOnClickListener {
             teacherViewModel.previousPage()
@@ -91,6 +99,12 @@ class TeacherListActivity : AppCompatActivity() {
 
         buttonNextPage.setOnClickListener {
             teacherViewModel.nextPage()
+        }
+
+        // Обработчик нажатия на кнопку поиска
+        buttonSearch.setOnClickListener {
+            val searchQuery = editTextSearch.text.toString().trim()
+            teacherViewModel.searchTeachers(searchQuery)
         }
     }
 

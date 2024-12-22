@@ -2,30 +2,18 @@ package com.example.faculty_app.ui.teachers
 
 import android.app.DatePickerDialog
 import android.os.Bundle
-import android.util.Log
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.EditText
-import android.widget.RadioGroup
-import android.widget.Spinner
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.faculty_app.R
 import com.example.faculty_app.data.factories.TeacherViewModelFactory
 import com.example.faculty_app.data.view_models.TeacherViewModel
-import com.example.faculty_app.data.network.RetrofitClient
-import com.example.faculty_app.data.models.Department
 import com.example.faculty_app.data.models.Teacher
 import com.example.faculty_app.data.models.User
 import com.example.faculty_app.data.repositories.TeacherRepository
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
+import java.util.*
 
 class AddTeacherActivity : AppCompatActivity() {
 
@@ -66,7 +54,24 @@ class AddTeacherActivity : AppCompatActivity() {
         yearsOfWorkEditText = findViewById(R.id.editTextYearsOfWork)
         saveButton = findViewById(R.id.buttonSave)
 
-        loadDepartments()
+        teacherViewModel.fetchDepartments()
+
+        teacherViewModel.departments.observe(this, Observer { departments ->
+            val departmentTitles = departments.map { it.title }
+            val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, departmentTitles)
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            departmentSpinner.adapter = adapter
+
+            departmentSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>, view: android.view.View, position: Int, id: Long) {
+                    selectedDepartmentId = departments[position].id
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                    selectedDepartmentId = 0
+                }
+            }
+        })
 
         val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
             selectedBirthday.set(Calendar.YEAR, year)
@@ -86,82 +91,58 @@ class AddTeacherActivity : AppCompatActivity() {
         }
 
         saveButton.setOnClickListener {
-            addTeacher()
-        }
-
-        teacherViewModel.isTeacherAdded.observe(this, Observer { isAdded ->
-            if (isAdded) {
-                setResult(RESULT_OK)
-                finish()
-            } else {
-                // Handle failure
-            }
-        })
-
-        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
-
-        toolbar.setNavigationOnClickListener {
-            onBackPressed()
+            validateAndAddTeacher()
         }
     }
 
-    private fun loadDepartments() {
-        RetrofitClient.apiService.getDepartments().enqueue(object : Callback<List<Department>> {
-            override fun onResponse(call: Call<List<Department>>, response: Response<List<Department>>) {
-                if (response.isSuccessful) {
-                    val departments = response.body() ?: emptyList()
-                    val departmentTitles = departments.map { it.title }
-                    val adapter = ArrayAdapter(this@AddTeacherActivity, android.R.layout.simple_spinner_item, departmentTitles)
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                    departmentSpinner.adapter = adapter
-
-                    departmentSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                        override fun onItemSelected(parentView: AdapterView<*>, view: android.view.View, position: Int, id: Long) {
-                            selectedDepartmentId = departments[position].id
-                        }
-
-                        override fun onNothingSelected(parentView: AdapterView<*>) {
-                            selectedDepartmentId = 0
-                        }
-                    }
-                } else {
-                    Log.e("AddTeacherActivity", "Failed to load departments")
-                }
-            }
-
-            override fun onFailure(call: Call<List<Department>>, t: Throwable) {
-                Log.e("AddTeacherActivity", "Error: ${t.message}")
-            }
-        })
-    }
-
-    private fun addTeacher() {
+    private fun updateBirthdayEditText() {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val formattedBirthday = dateFormat.format(selectedBirthday.time)
+        birthdayEditText.setText(dateFormat.format(selectedBirthday.time))
+    }
 
-        val name = nameEditText.text.toString()
-        val surname = surnameEditText.text.toString()
-        val middleName = middleNameEditText.text.toString()
-        val email = emailEditText.text.toString()
-        val login = loginEditText.text.toString()
-        val password = passwordEditText.text.toString()
+    private fun validateAndAddTeacher() {
+        val name = nameEditText.text.toString().trim()
+        val surname = surnameEditText.text.toString().trim()
+        val middleName = middleNameEditText.text.toString().trim()
+        val email = emailEditText.text.toString().trim()
+        val login = loginEditText.text.toString().trim()
+        val password = passwordEditText.text.toString().trim()
+        val yearsOfWork = yearsOfWorkEditText.text.toString().trim()
+
+        if (name.isEmpty() || surname.isEmpty() || email.isEmpty() || login.isEmpty() || password.isEmpty() || yearsOfWork.isEmpty()) {
+            showToast("All fields must be filled!")
+            return
+        }
+
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            showToast("Invalid email address!")
+            return
+        }
+
+        val yearsOfWorkInt = yearsOfWork.toIntOrNull()
+        if (yearsOfWorkInt == null || yearsOfWorkInt <= 0) {
+            showToast("Years of work must be a positive number!")
+            return
+        }
+
+        if (selectedDepartmentId == 0) {
+            showToast("Please select a department!")
+            return
+        }
+
         val gender = when (genderRadioGroup.checkedRadioButtonId) {
             R.id.radioButtonMale -> "Male"
             R.id.radioButtonFemale -> "Female"
             else -> ""
         }
-        val yearsOfWork = yearsOfWorkEditText.text.toString()
 
-        if (name.isEmpty() || surname.isEmpty() || email.isEmpty() || login.isEmpty() || password.isEmpty() || yearsOfWork.isEmpty()) {
-            Log.e("AddTeacherActivity", "All fields must be filled!")
+        if (gender.isEmpty()) {
+            showToast("Please select a gender!")
             return
         }
 
-        if (selectedDepartmentId == 0) {
-            Log.e("AddTeacherActivity", "No department selected!")
-            return
-        }
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val formattedBirthday = dateFormat.format(selectedBirthday.time)
 
         val newTeacher = Teacher(
             id = 0,
@@ -182,11 +163,19 @@ class AddTeacherActivity : AppCompatActivity() {
         )
 
         teacherViewModel.addTeacher(newTeacher)
+
+        teacherViewModel.isTeacherAdded.observe(this, Observer { isAdded ->
+            if (isAdded) {
+                showToast("Teacher added successfully!")
+                setResult(RESULT_OK)
+                finish()
+            } else {
+                showToast("Failed to add teacher. Please try again.")
+            }
+        })
     }
 
-    private fun updateBirthdayEditText() {
-        val dateFormat = SimpleDateFormat("YYYY-MM-DD", Locale.getDefault())
-        birthdayEditText.setText(dateFormat.format(selectedBirthday.time))
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }
-

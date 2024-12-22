@@ -9,15 +9,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.faculty_app.R
 import com.example.faculty_app.data.factories.TeacherViewModelFactory
-import com.example.faculty_app.data.view_models.TeacherViewModel
-import com.example.faculty_app.data.network.RetrofitClient
-import com.example.faculty_app.data.models.Department
 import com.example.faculty_app.data.models.Teacher
 import com.example.faculty_app.data.models.User
 import com.example.faculty_app.data.repositories.TeacherRepository
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.example.faculty_app.data.view_models.TeacherViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -39,6 +34,7 @@ class EditTeacherActivity : AppCompatActivity() {
     private var teacherId: Int = 0
     private var userId: Int = 0
     private lateinit var teacherViewModel: TeacherViewModel
+    private val TAG = "EditTeacherActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,27 +59,16 @@ class EditTeacherActivity : AppCompatActivity() {
 
         teacherId = intent.getIntExtra("TEACHER_ID", 0)
         userId = intent.getIntExtra("USER_ID", 0)
-        val teacherName = intent.getStringExtra("TEACHER_NAME")
-        val teacherSurname = intent.getStringExtra("TEACHER_SURNAME")
-        val teacherMiddleName = intent.getStringExtra("TEACHER_MIDDLE_NAME")
-        val teacherEmail = intent.getStringExtra("TEACHER_EMAIL")
-        val teacherLogin = intent.getStringExtra("TEACHER_LOGIN")
-        val teacherPassword = intent.getStringExtra("TEACHER_PASSWORD")
+        nameEditText.setText(intent.getStringExtra("TEACHER_NAME"))
+        surnameEditText.setText(intent.getStringExtra("TEACHER_SURNAME"))
+        middleNameEditText.setText(intent.getStringExtra("TEACHER_MIDDLE_NAME"))
+        emailEditText.setText(intent.getStringExtra("TEACHER_EMAIL"))
+        loginEditText.setText(intent.getStringExtra("TEACHER_LOGIN"))
+        passwordEditText.setText(intent.getStringExtra("TEACHER_PASSWORD"))
+        yearsOfWorkEditText.setText(intent.getStringExtra("TEACHER_YEARS_OF_WORK"))
         val teacherBirthday = intent.getStringExtra("TEACHER_BIRTHDAY")
         val teacherGender = intent.getStringExtra("TEACHER_GENDER") ?: ""
-        val teacherYearsOfWork = intent.getStringExtra("TEACHER_YEARS_OF_WORK")
-        val departmentId = intent.getIntExtra("TEACHER_DEPARTMENT_ID", 0)
-
-        Log.d("EditTeacherActivity", "Intent extras: TEACHER_ID=$teacherId, TEACHER_NAME=$teacherName, TEACHER_SURNAME=$teacherSurname, TEACHER_MIDDLE_NAME=$teacherMiddleName, TEACHER_EMAIL=$teacherEmail, TEACHER_LOGIN=$teacherLogin, TEACHER_PASSWORD=$teacherPassword, TEACHER_BIRTHDAY=$teacherBirthday, TEACHER_GENDER=$teacherGender, TEACHER_YEARS_OF_WORK=$teacherYearsOfWork, TEACHER_DEPARTMENT_ID=$departmentId")
-
-        // Устанавливаем данные в поля
-        nameEditText.setText(teacherName)
-        surnameEditText.setText(teacherSurname)
-        middleNameEditText.setText(teacherMiddleName)
-        emailEditText.setText(teacherEmail)
-        loginEditText.setText(teacherLogin)
-        passwordEditText.setText(teacherPassword)
-        yearsOfWorkEditText.setText(teacherYearsOfWork)
+        selectedDepartmentId = intent.getIntExtra("TEACHER_DEPARTMENT_ID", 0)
 
         if (teacherGender == "Female") {
             genderRadioGroup.check(R.id.radioButtonFemale)
@@ -108,8 +93,30 @@ class EditTeacherActivity : AppCompatActivity() {
             ).show()
         }
 
-        loadDepartments()
-        selectedDepartmentId = departmentId
+        if (!teacherBirthday.isNullOrEmpty()) {
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            selectedBirthday.time = dateFormat.parse(teacherBirthday) ?: Date()
+            updateBirthdayEditText()
+        }
+
+        teacherViewModel.fetchDepartments()
+        teacherViewModel.departments.observe(this, Observer { departments ->
+            val departmentTitles = departments.map { it.title }
+            val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, departmentTitles)
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            departmentSpinner.adapter = adapter
+
+            departmentSpinner.setSelection(departments.indexOfFirst { it.id == selectedDepartmentId })
+            departmentSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parentView: AdapterView<*>, view: android.view.View, position: Int, id: Long) {
+                    selectedDepartmentId = departments[position].id
+                }
+
+                override fun onNothingSelected(parentView: AdapterView<*>) {
+                    selectedDepartmentId = 0
+                }
+            }
+        })
 
         saveButton.setOnClickListener {
             updateTeacher()
@@ -117,12 +124,11 @@ class EditTeacherActivity : AppCompatActivity() {
 
         teacherViewModel.isTeacherUpdated.observe(this, Observer { isUpdated ->
             if (isUpdated) {
-                Log.d("EditTeacherActivity", "Teacher updated successfully")
+                Toast.makeText(this, "Teacher updated successfully", Toast.LENGTH_SHORT).show()
                 setResult(RESULT_OK)
                 finish()
             } else {
-                Log.e("EditTeacherActivity", "Error updating teacher")
-                // Handle failure
+                Toast.makeText(this, "Error updating teacher", Toast.LENGTH_SHORT).show()
             }
         })
 
@@ -134,41 +140,11 @@ class EditTeacherActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadDepartments() {
-        RetrofitClient.apiService.getDepartments().enqueue(object : Callback<List<Department>> {
-            override fun onResponse(call: Call<List<Department>>, response: Response<List<Department>>) {
-                if (response.isSuccessful) {
-                    val departments = response.body() ?: emptyList()
-                    val departmentTitles = departments.map { it.title }
-                    val adapter = ArrayAdapter(this@EditTeacherActivity, android.R.layout.simple_spinner_item, departmentTitles)
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                    departmentSpinner.adapter = adapter
-
-                    departmentSpinner.setSelection(departments.indexOfFirst { it.id == selectedDepartmentId })
-                    departmentSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                        override fun onItemSelected(parentView: AdapterView<*>, view: android.view.View, position: Int, id: Long) {
-                            selectedDepartmentId = departments[position].id
-                        }
-
-                        override fun onNothingSelected(parentView: AdapterView<*>) {
-                            selectedDepartmentId = 0
-                        }
-                    }
-                } else {
-                    Log.e("EditTeacherActivity", "Failed to load departments: ${response.errorBody()?.string()}")
-                }
-            }
-
-            override fun onFailure(call: Call<List<Department>>, t: Throwable) {
-                Log.e("EditTeacherActivity", "Error loading departments: ${t.message}")
-            }
-        })
-    }
-
     private fun updateBirthdayEditText() {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         birthdayEditText.setText(dateFormat.format(selectedBirthday.time))
     }
+
     private fun updateTeacher() {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val formattedBirthday = dateFormat.format(selectedBirthday.time)
@@ -176,18 +152,40 @@ class EditTeacherActivity : AppCompatActivity() {
         val name = nameEditText.text.toString().trim()
         val surname = surnameEditText.text.toString().trim()
         val middleName = middleNameEditText.text.toString().trim()
-        val email = emailEditText.text.toString().trim()
+        val email = emailEditText.text.toString().trim() + "d"
         val login = loginEditText.text.toString().trim()
         val password = passwordEditText.text.toString().trim()
         val yearsOfWork = yearsOfWorkEditText.text.toString().trim()
+        
+        Log.d(TAG, "UpdateTeacher: name=$name, surname=$surname, email=$email, department=$selectedDepartmentId")
 
         if (name.isEmpty() || surname.isEmpty() || middleName.isEmpty() || email.isEmpty() || login.isEmpty() || password.isEmpty() || yearsOfWork.isEmpty()) {
-            Log.e("EditTeacherActivity", "All fields must be filled!")
+            Log.e(TAG, "All fields must be filled!") // Логируем ошибку
+            Toast.makeText(this, "All fields must be filled!", Toast.LENGTH_SHORT).show()
             return
         }
 
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            Log.e("EditTeacherActivity", "Invalid email address!")
+            Log.e(TAG, "Invalid email address: $email") // Логируем ошибку
+            Toast.makeText(this, "Invalid email address!", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (selectedDepartmentId == 0) {
+            Log.e(TAG, "Department not selected") // Логируем ошибку
+            Toast.makeText(this, "Please select a department!", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val gender = when (genderRadioGroup.checkedRadioButtonId) {
+            R.id.radioButtonMale -> "Male"
+            R.id.radioButtonFemale -> "Female"
+            else -> ""
+        }
+
+        if (gender.isEmpty()) {
+            Log.e(TAG, "Gender not selected") // Логируем ошибку
+            Toast.makeText(this, "Please select a gender!", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -200,7 +198,7 @@ class EditTeacherActivity : AppCompatActivity() {
             surname = surname,
             middle_name = middleName,
             birthday = formattedBirthday,
-            sex = if (genderRadioGroup.checkedRadioButtonId == R.id.radioButtonMale) "Male" else "Female",
+            sex = gender,
             role = "teacher"
         )
 
@@ -211,8 +209,21 @@ class EditTeacherActivity : AppCompatActivity() {
             year_of_start_of_work = yearsOfWork
         )
 
+        Log.d(TAG, "Sending update request for teacher ID: $teacherId") // Логируем отправку запроса
+
         teacherViewModel.updateTeacher(teacherId, teacherUpdateRequest)
+
+        // Логирование в случае успешного или неуспешного обновления
+        teacherViewModel.isTeacherUpdated.observe(this, Observer { isUpdated ->
+            if (isUpdated) {
+                Log.d(TAG, "Teacher updated successfully") // Логируем успешное обновление
+                Toast.makeText(this, "Teacher updated successfully", Toast.LENGTH_SHORT).show()
+                setResult(RESULT_OK)
+                finish()
+            } else {
+                Log.e(TAG, "Error updating teacher") // Логируем ошибку
+                Toast.makeText(this, "Error updating teacher", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
-
 }
-

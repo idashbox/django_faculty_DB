@@ -1,43 +1,37 @@
 package com.example.faculty_app.data.repositories
 
-import com.example.faculty_app.data.network.ApiService
-import com.example.faculty_app.data.network.RetrofitClient.retrofit
 import com.example.faculty_app.data.models.User
-import retrofit2.Call
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import com.example.faculty_app.data.models.UserResponse
+import com.example.faculty_app.data.network.ApiService
+import com.example.faculty_app.data.network.RetrofitClient
+import retrofit2.Response
 
 class UserRepository {
 
-    private val apiService: ApiService
+    private val apiService: ApiService = RetrofitClient.apiService
 
-    init {
-
-        apiService = retrofit.create(ApiService::class.java)
+    suspend fun getUsers(
+        page: Int,
+        pageSize: Int,
+        name: String? = null,
+        orderBy: String? = null
+    ): Response<UserResponse> {
+        return apiService.getUsers(page, pageSize, name, orderBy)
     }
 
-    // Получение всех пользователей
-    fun getUsers(): Call<List<User>> {
-        return apiService.getUsers()
-    }
-
-    // Получение одного пользователя по id
-    fun getUser(id: Int): Call<User> {
+    suspend fun getUser(id: Int): Response<User> {
         return apiService.getUser(id)
     }
 
-    // Создание нового пользователя
-    fun createUser(user: User): Call<User> {
+    suspend fun createUser(user: User): Response<User> {
         return apiService.createUser(user)
     }
 
-    // Обновление информации о пользователе
-    fun updateUser(id: Int, user: User): Call<User> {
+    suspend fun updateUser(id: Int, user: User): Response<User> {
         return apiService.updateUser(id, user)
     }
 
-    // Удаление пользователя
-    fun deleteUser(id: Int): Call<Void> {
+    suspend fun deleteUser(id: Int): Response<Void> {
         return apiService.deleteUser(id)
     }
 }
