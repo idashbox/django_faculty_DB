@@ -4,10 +4,12 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.faculty_app.data.models.Department
+import com.example.faculty_app.data.models.Group
 import com.example.faculty_app.data.models.UserToGroup
 import com.example.faculty_app.data.repositories.UserToGroupRepository
-import retrofit2.Call
-import retrofit2.Callback
+import kotlinx.coroutines.launch
 import retrofit2.Response
 
 class UserToGroupViewModel(private val userToGroupRepository: UserToGroupRepository) : ViewModel() {
@@ -21,60 +23,108 @@ class UserToGroupViewModel(private val userToGroupRepository: UserToGroupReposit
     private val _isUserToGroupUpdated = MutableLiveData<Boolean>()
     val isUserToGroupUpdated: LiveData<Boolean> get() = _isUserToGroupUpdated
 
-    fun fetchUserToGroups() {
-        userToGroupRepository.getUserToGroups().enqueue(object : Callback<List<UserToGroup>> {
-            override fun onResponse(call: Call<List<UserToGroup>>, response: Response<List<UserToGroup>>) {
-                if (response.isSuccessful) {
-                    val sortedList = response.body()?.sortedBy { it.id } ?: emptyList()
-                    _userToGroups.postValue(sortedList)
-                }
-            }
+    private val _groups = MutableLiveData<List<Group>>()
+    val groups: LiveData<List<Group>> get() = _groups
 
-            override fun onFailure(call: Call<List<UserToGroup>>, t: Throwable) {
-                Log.e("UserToGroupViewModel", "Failed to fetch user to groups: ${t.message}")
+    private var _currentPage = 1
+    val currentPage: Int get() = _currentPage
+
+    private val _pageSize = MutableLiveData<Int>()
+    val pageSize: LiveData<Int> get() = _pageSize
+
+    init {
+        _pageSize.value = 10
+        fetchUserToGroups(orderBy = "id")
+    }
+
+    fun fetchUserToGroups(
+        nameFilter: String? = null,
+        orderBy: String? = null
+    ) {
+        viewModelScope.launch {
+            try {
+                val response = userToGroupRepository.getUserToGroups(
+                    _currentPage,
+                    _pageSize.value ?: 10,
+                    nameFilter,
+                    orderBy
+                )
+                if (response.isSuccessful) {
+                    val userToGroupResponse = response.body()
+                    _userToGroups.postValue(userToGroupResponse?.results ?: emptyList())
+                } else {
+                    Log.e("UserToGroupViewModel", "Failed to fetch user to groups: ${response.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                Log.e("UserToGroupViewModel", "Exception occurred: ${e.message}")
             }
-        })
+        }
     }
 
     fun addUserToGroup(userToGroup: UserToGroup) {
-        userToGroupRepository.createUserToGroup(userToGroup).enqueue(object : Callback<UserToGroup> {
-            override fun onResponse(call: Call<UserToGroup>, response: Response<UserToGroup>) {
+        viewModelScope.launch {
+            try {
+                val response = userToGroupRepository.createUserToGroup(userToGroup)
                 _isUserToGroupAdded.postValue(response.isSuccessful)
-                fetchUserToGroups()
+                fetchUserToGroups(orderBy = "id")
+            } catch (e: Exception) {
+                Log.e("UserToGroupViewModel", "Exception occurred: ${e.message}")
             }
-
-            override fun onFailure(call: Call<UserToGroup>, t: Throwable) {
-                _isUserToGroupAdded.postValue(false)
-                Log.e("UserToGroupViewModel", "Failed to add user to group: ${t.message}")
-            }
-        })
+        }
     }
 
     fun updateUserToGroup(userToGroupId: Int, userToGroup: UserToGroup) {
-        userToGroupRepository.updateUserToGroup(userToGroupId, userToGroup).enqueue(object : Callback<UserToGroup> {
-            override fun onResponse(call: Call<UserToGroup>, response: Response<UserToGroup>) {
+        viewModelScope.launch {
+            try {
+                val response = userToGroupRepository.updateUserToGroup(userToGroupId, userToGroup)
                 _isUserToGroupUpdated.postValue(response.isSuccessful)
-                fetchUserToGroups()
+                fetchUserToGroups(orderBy = "id")
+            } catch (e: Exception) {
+                Log.e("UserToGroupViewModel", "Exception occurred: ${e.message}")
             }
-
-            override fun onFailure(call: Call<UserToGroup>, t: Throwable) {
-                _isUserToGroupUpdated.postValue(false)
-                Log.e("UserToGroupViewModel", "Failed to update user to group: ${t.message}")
-            }
-        })
+        }
     }
 
     fun deleteUserToGroup(userToGroupId: Int) {
-        userToGroupRepository.deleteUserToGroup(userToGroupId).enqueue(object : Callback<Void> {
-            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+        viewModelScope.launch {
+            try {
+                val response = userToGroupRepository.deleteUserToGroup(userToGroupId)
                 if (response.isSuccessful) {
-                    fetchUserToGroups()
+                    fetchUserToGroups(orderBy = "id")
+                } else {
+                    Log.e("UserToGroupViewModel", "Failed to delete user to group: ${response.errorBody()?.string()}")
                 }
+            } catch (e: Exception) {
+                Log.e("UserToGroupViewModel", "Exception occurred: ${e.message}")
             }
+        }
+    }
 
-            override fun onFailure(call: Call<Void>, t: Throwable) {
-                Log.e("UserToGroupViewModel", "Failed to delete user to group: ${t.message}")
+    fun nextPage() {
+        _currentPage++
+        fetchUserToGroups(orderBy = "id")
+    }
+
+    fun previousPage() {
+        if (_currentPage > 1) {
+            _currentPage--
+            fetchUserToGroups(orderBy = "id")
+        }
+    }
+
+    fun fetchGroups() {
+        viewModelScope.launch {
+            try {
+                val response = userToGroupRepository.getGroups(1, 100)
+                if (response.isSuccessful) {
+                    val departmentResponse = response.body()
+                    _groups.postValue(departmentResponse?.results ?: emptyList())
+                } else {
+                    Log.e("TeacherViewModel", "Failed to fetch departments: ${response.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                Log.e("TeacherViewModel", "Exception occurred: ${e.message}")
             }
-        })
+        }
     }
 }

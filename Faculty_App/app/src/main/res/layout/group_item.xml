@@ -1,31 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
     android:padding="16dp">
 
     <TextView
         android:id="@+id/group_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="center_vertical"
+        android:text="Group Name"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/button_edit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/button_edit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="106dp"
+        android:layout_height="39dp"
         android:backgroundTint="#B34DBA29"
+        android:text="Изменить"
         android:textColor="@android:color/white"
-        android:layout_marginBottom="12dp"
-        android:text="Изменить" />
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/group_name"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/button_delete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="106dp"
+        android:layout_height="39dp"
         android:backgroundTint="#B34DBA29"
+        android:text="Удалить"
         android:textColor="@android:color/white"
-        android:layout_marginBottom="12dp"
-        android:text="Удалить" />
-</LinearLayout>
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/group_name"
+        app:layout_constraintTop_toBottomOf="@+id/button_edit" />
+
+    <Button
+        android:id="@+id/button_view_students"
+        android:layout_width="106dp"
+        android:layout_height="39dp"
+        android:backgroundTint="#B34DBA29"
+        android:text="Студенты"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/group_name"
+        app:layout_constraintTop_toBottomOf="@+id/button_delete" />
+</androidx.constraintlayout.widget.ConstraintLayout>

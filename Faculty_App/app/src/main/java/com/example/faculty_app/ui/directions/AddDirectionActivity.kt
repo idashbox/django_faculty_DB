@@ -92,7 +92,7 @@ class AddDirectionActivity : AppCompatActivity() {
     private fun addDirection() {
 
         val title = titleEdit.text.toString()
-        val code = codeEdit.text
+        val code = codeEdit.text.toString()
         val degree = degreeEdit.text.toString()
 
         if (title.isEmpty() || degree.isEmpty()) {
@@ -108,7 +108,7 @@ class AddDirectionActivity : AppCompatActivity() {
         val newDirection = Direction(
             id = 0,
             title = title,
-            code = 0,
+            code = code,
             degree = degree,
             department = selectedDepartmentId,
         )

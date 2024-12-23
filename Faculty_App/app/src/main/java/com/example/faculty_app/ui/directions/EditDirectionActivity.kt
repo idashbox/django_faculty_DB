@@ -8,16 +8,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.faculty_app.R
 import com.example.faculty_app.data.factories.DirectionViewModelFactory
-import com.example.faculty_app.data.network.RetrofitClient
 import com.example.faculty_app.data.models.Department
 import com.example.faculty_app.data.models.Direction
 import com.example.faculty_app.data.repositories.DirectionRepository
 import com.example.faculty_app.data.view_models.DirectionViewModel
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.text.SimpleDateFormat
-import java.util.*
 
 class EditDirectionActivity : AppCompatActivity() {
 
@@ -50,10 +44,9 @@ class EditDirectionActivity : AppCompatActivity() {
         val code = intent.getIntExtra("DIRECTION_CODE", 0)
         val degree = intent.getStringExtra("DIRECTION_DEGREE")
         val departmentId = intent.getIntExtra("DIRECTION_DEPARTMENT", 0)
-//        val departmentSpinner = intent.getIntExtra(("DIRECTION_DEPARTMENT")
 
         titleEdit.setText(title)
-        codeEdit.setText(code)
+        codeEdit.setText(code.toString())
         degreeEdit.setText(degree)
 
         directionViewModel.fetchDepartments()
@@ -104,16 +97,13 @@ class EditDirectionActivity : AppCompatActivity() {
         val directionUpdateRequest = Direction(
             id = directionId,
             title = titleEdit.text.toString(),
-            code = 0,
+            code = codeEdit.text.toString(),
             degree = degreeEdit.text.toString(),
             department = selectedDepartmentId,
         )
 
         Log.d("EditTeacherActivity", "Updating direction: $directionUpdateRequest")
 
-
         directionViewModel.updateDirection(directionId, directionUpdateRequest)
     }
 }
-
-

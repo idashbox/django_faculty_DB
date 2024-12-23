@@ -9,11 +9,12 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.faculty_app.data.view_models.GroupViewModel
 import com.example.faculty_app.data.models.Group
+import com.example.faculty_app.data.view_models.GroupViewModel
+import com.example.faculty_app.data.views.StudentListActivity
 import com.example.faculty_app.ui.groups.EditGroupActivity
 
 class GroupAdapter(private val viewModel: GroupViewModel) : ListAdapter<Group, GroupAdapter.GroupViewHolder>(GroupDiffCallback()) {
@@ -32,10 +33,13 @@ class GroupAdapter(private val viewModel: GroupViewModel) : ListAdapter<Group, G
         private val nameTextView: TextView = itemView.findViewById(R.id.group_name)
         private val deleteButton: Button = itemView.findViewById(R.id.button_delete)
         private val editButton: Button = itemView.findViewById(R.id.button_edit)
+        private val viewStudentsButton: Button = itemView.findViewById(R.id.button_view_students)
 
         fun bind(group: Group) {
-            Log.d("TeacherAdapter", "Binding user to group: ${group.course + group.number}")
-            nameTextView.text = group.course.toString() + group.number.toString()
+            viewModel.getDirection(group.direction) { direction ->
+                Log.d("GroupAdapter", "Binding user to group: ${group.course + group.number}")
+                nameTextView.text = "$direction курс: ${group.course} группа: ${group.number}"
+            }
 
             editButton.setOnClickListener {
                 val intent = Intent(itemView.context, EditGroupActivity::class.java).apply {
@@ -49,20 +53,26 @@ class GroupAdapter(private val viewModel: GroupViewModel) : ListAdapter<Group, G
                 (itemView.context as Activity).startActivityForResult(intent, 2)
             }
 
-            // Обработчик для кнопки удаления
             deleteButton.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     val group = getItem(position)
                     AlertDialog.Builder(itemView.context)
                         .setTitle("Подтверждение удаления")
-                        .setMessage("Вы уверены, что хотите удалить группу ${group.course+group.number}?")
+                        .setMessage("Вы уверены, что хотите удалить группу ${group.course + group.number}?")
                         .setPositiveButton("Да") { _, _ ->
                             viewModel.deleteGroup(group.id)
                         }
                         .setNegativeButton("Нет", null)
                         .show()
                 }
+            }
+
+            viewStudentsButton.setOnClickListener {
+                val intent = Intent(itemView.context, StudentListActivity::class.java).apply {
+                    putExtra("GROUP_ID", group.id)
+                }
+                itemView.context.startActivity(intent)
             }
         }
     }

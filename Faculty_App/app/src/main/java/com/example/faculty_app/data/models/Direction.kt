@@ -6,6 +6,6 @@ data class Direction(
     val id: Int,
     val title: String,
     val department: Int,
-    val code: Int,
+    val code: String,
     val degree: String,
 )

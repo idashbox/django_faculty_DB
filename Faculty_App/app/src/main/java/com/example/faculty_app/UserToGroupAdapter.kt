@@ -35,7 +35,7 @@ class UserToGroupAdapter(private val viewModel: UserToGroupViewModel) : ListAdap
 
         fun bind(userToGroup: UserToGroup) {
             Log.d("TeacherAdapter", "Binding user to group: ${userToGroup.user.name}")
-            nameTextView.text = userToGroup.user.name + userToGroup.user.surname
+            nameTextView.text = userToGroup.user.name +" " + userToGroup.user.surname
 
             editButton.setOnClickListener {
                 val intent = Intent(itemView.context, EditUserToGroupActivity::class.java).apply {

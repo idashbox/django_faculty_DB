@@ -19,7 +19,7 @@ import com.example.faculty_app.ui.directions.EditDirectionActivity
 class DirectionAdapter(private val viewModel: DirectionViewModel) : ListAdapter<Direction, DirectionAdapter.DirectionViewHolder>(DirectionDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DirectionViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.group_item, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.direction_item, parent, false)
         return DirectionViewHolder(view)
     }
 
@@ -48,7 +48,6 @@ class DirectionAdapter(private val viewModel: DirectionViewModel) : ListAdapter<
                 (itemView.context as Activity).startActivityForResult(intent, 2)
             }
 
-            // Обработчик для кнопки удаления
             deleteButton.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {

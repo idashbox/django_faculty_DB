@@ -5,11 +5,14 @@ import com.example.faculty_app.data.models.DepartmentResponse
 import com.example.faculty_app.data.models.Teacher
 import com.example.faculty_app.data.models.User
 import com.example.faculty_app.data.models.Direction
+import com.example.faculty_app.data.models.DirectionResponse
 import com.example.faculty_app.data.models.Group
+import com.example.faculty_app.data.models.GroupResponse
 import com.example.faculty_app.data.models.TeacherResponse
 import com.example.faculty_app.data.models.TeacherStatistics
 import com.example.faculty_app.data.models.UserResponse
 import com.example.faculty_app.data.models.UserToGroup
+import com.example.faculty_app.data.models.UserToGroupResponse
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
@@ -96,47 +99,62 @@ interface ApiService {
     suspend fun updateDepartment(@Path("id") id: Int, @Body department: Department): Response<Department>
 
     @GET("api/directions/")
-    fun getDirections(): Call<List<Direction>>
+    suspend fun getDirections(
+        @Query("page") page: Int,
+        @Query("pageSize") pageSize: Int,
+        @Query("title") title: String? = null,
+        @Query("orderBy") orderBy: String? = null
+    ): Response<DirectionResponse>
 
     @GET("api/directions/{id}/")
-    fun getDirection(@Path("id") id: Int): Call<Direction>
+    suspend fun getDirection(@Path("id") id: Int): Response<Direction>
 
     @POST("api/directions/")
-    fun createDirection(@Body direction: Direction): Call<Direction>
+    suspend fun createDirection(@Body direction: Direction): Response<Direction>
 
     @PUT("api/directions/{id}/")
-    fun updateDirection(@Path("id") id: Int, @Body direction: Direction): Call<Direction>
+    suspend fun updateDirection(@Path("id") id: Int, @Body direction: Direction): Response<Direction>
 
     @DELETE("api/directions/{id}/")
-    fun deleteDirection(@Path("id") id: Int): Call<Void>
+    suspend fun deleteDirection(@Path("id") id: Int): Response<Void>
 
     @GET("api/groups/")
-    fun getGroups(): Call<List<Group>>
+    suspend fun getGroups(
+        @Query("page") page: Int,
+        @Query("pageSize") pageSize: Int,
+        @Query("number") number: String? = null,
+        @Query("orderBy") orderBy: String? = null
+    ): Response<GroupResponse>
 
     @GET("api/groups/{id}/")
-    fun getGroup(@Path("id") id: Int): Call<Group>
+    suspend fun getGroup(@Path("id") id: Int): Response<Group>
 
     @POST("api/groups/")
-    fun createGroup(@Body group: Group): Call<Group>
+    suspend fun createGroup(@Body group: Group): Response<Group>
 
     @PUT("api/groups/{id}/")
-    fun updateGroup(@Path("id") id: Int, @Body group: Group): Call<Group>
+    suspend fun updateGroup(@Path("id") id: Int, @Body group: Group): Response<Group>
 
     @DELETE("api/groups/{id}/")
-    fun deleteGroup(@Path("id") id: Int): Call<Void>
+    suspend fun deleteGroup(@Path("id") id: Int): Response<Void>
 
     @GET("api/user_to_groups/")
-    fun getUserToGroups(): Call<List<UserToGroup>>
+    suspend fun getUserToGroups(
+        @Query("page") page: Int,
+        @Query("pageSize") pageSize: Int,
+        @Query("name") name: String? = null,
+        @Query("orderBy") orderBy: String? = null
+    ): Response<UserToGroupResponse>
 
     @GET("api/user_to_groups/{id}/")
-    fun getUserToGroup(@Path("id") id: Int): Call<UserToGroup>
+    suspend fun getUserToGroup(@Path("id") id: Int): Response<UserToGroup>
 
     @POST("api/user_to_groups/")
-    fun createUserToGroup(@Body userToGroup: UserToGroup): Call<UserToGroup>
+    suspend fun createUserToGroup(@Body userToGroup: UserToGroup): Response<UserToGroup>
 
     @PUT("api/user_to_groups/{id}/")
-    fun updateUserToGroup(@Path("id") id: Int, @Body userToGroup: UserToGroup): Call<UserToGroup>
+    suspend fun updateUserToGroup(@Path("id") id: Int, @Body userToGroup: UserToGroup): Response<UserToGroup>
 
     @DELETE("api/user_to_groups/{id}/")
-    fun deleteUserToGroup(@Path("id") id: Int): Call<Void>
+    suspend fun deleteUserToGroup(@Path("id") id: Int): Response<Void>
 }

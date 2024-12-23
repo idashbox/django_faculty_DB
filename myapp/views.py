@@ -40,7 +40,7 @@ class TeacherViewSet(viewsets.ModelViewSet):
         if department:
             queryset = queryset.filter(Q(department_id=department))
         if order_by:
-            # Проверяем, чтобы order_by ссылался на корректные поля
+
             valid_order_fields = ['id', 'user__name', 'user__surname', 'user__middle_name', 'user__birthday']
             if order_by in valid_order_fields:
                 queryset = queryset.order_by(order_by)
@@ -103,6 +103,35 @@ class GroupViewSet(viewsets.ModelViewSet):
 class UserToGroupViewSet(viewsets.ModelViewSet):
     queryset = UserToGroup.objects.all()
     serializer_class = UserToGroupSerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+        name = self.request.query_params.get('name')
+        surname = self.request.query_params.get('surname')
+        middle_name = self.request.query_params.get('middle_name')
+        birthday = self.request.query_params.get('birthday')
+        department = self.request.query_params.get('department')
+        order_by = self.request.query_params.get('orderBy')
+
+        if name:
+            queryset = queryset.filter(Q(user__name__icontains=name))
+        if surname:
+            queryset = queryset.filter(Q(user__surname__icontains=surname))
+        if middle_name:
+            queryset = queryset.filter(Q(user__middle_name__icontains=middle_name))
+        if birthday:
+            queryset = queryset.filter(Q(user__birthday__icontains=birthday))
+        if department:
+            queryset = queryset.filter(Q(department_id=department))
+        if order_by:
+
+            valid_order_fields = ['id', 'user__name', 'user__surname', 'user__middle_name', 'user__birthday']
+            if order_by in valid_order_fields:
+                queryset = queryset.order_by(order_by)
+            else:
+                raise ValueError(f"Invalid order_by field: {order_by}")
+
+        return queryset
 
 class DirectionOfStudyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = DirectionOfStudy.objects.all()

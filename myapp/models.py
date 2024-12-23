@@ -40,8 +40,8 @@ class DirectionOfStudy(models.Model):
 class Group(models.Model):
     id = models.AutoField(primary_key=True)
     direction = models.ForeignKey('DirectionOfStudy', related_name='groups', on_delete=models.CASCADE)
-    headmen = models.OneToOneField('UserToGroup', on_delete=models.CASCADE, related_name='headman')
-    curator = models.OneToOneField('Teacher', on_delete=models.CASCADE, related_name='curator')
+    headmen = models.OneToOneField('UserToGroup', on_delete=models.CASCADE, related_name='headman', null=True)
+    curator = models.OneToOneField('Teacher', on_delete=models.CASCADE, related_name='curator', null=True)
     course = models.CharField(max_length=100)
     number = models.CharField(max_length=100)
 

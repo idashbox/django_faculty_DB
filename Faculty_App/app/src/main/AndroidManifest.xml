@@ -32,17 +32,37 @@
 
         <activity android:name=".data.views.DepartmentListActivity" />
 
+        <activity android:name=".data.views.StudentListActivity" />
+
         <activity android:name=".ui.users.EditUserActivity" />
 
         <activity android:name=".ui.teachers.EditTeacherActivity" />
 
         <activity android:name=".ui.dapartments.EditDepartmentActivity" />
 
-        <activity android:name=".ui.users.AddUserActivity"></activity>
+        <activity android:name=".ui.users.AddUserActivity"/>
 
-        <activity android:name=".ui.teachers.AddTeacherActivity"></activity>
+        <activity android:name=".ui.teachers.AddTeacherActivity"/>
 
-        <activity android:name=".ui.dapartments.AddDepartmentActivity"></activity>
+        <activity android:name=".ui.dapartments.AddDepartmentActivity"/>
+
+        <activity android:name=".data.views.DirectionListActivity" />
+
+        <activity android:name=".data.views.GroupListActivity" />
+
+        <activity android:name=".data.views.UserToGroupListActivity" />
+
+        <activity android:name=".ui.user_to_group.EditUserToGroupActivity" />
+
+        <activity android:name=".ui.groups.EditGroupActivity" />
+
+        <activity android:name=".ui.directions.EditDirectionActivity" />
+
+        <activity android:name=".ui.user_to_group.AddUserToGroupActivity"/>
+
+        <activity android:name=".ui.groups.AddGroupActivity"/>
+
+        <activity android:name=".ui.directions.AddDirectionActivity"/>
 
     </application>
 

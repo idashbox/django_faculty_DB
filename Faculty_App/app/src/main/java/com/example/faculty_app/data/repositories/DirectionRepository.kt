@@ -4,10 +4,8 @@ import com.example.faculty_app.data.models.DepartmentResponse
 import com.example.faculty_app.data.network.ApiService
 import com.example.faculty_app.data.network.RetrofitClient.retrofit
 import com.example.faculty_app.data.models.Direction
-import retrofit2.Call
+import com.example.faculty_app.data.models.DirectionResponse
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class DirectionRepository {
 
@@ -16,23 +14,28 @@ class DirectionRepository {
         apiService = retrofit.create(ApiService::class.java)
     }
 
-    fun getDirections(): Call<List<Direction>> {
-        return apiService.getDirections()
+    suspend fun getDirections(
+        page: Int,
+        pageSize: Int,
+        title: String?,
+        orderBy: String? = null
+    ): Response<DirectionResponse> {
+        return apiService.getDirections(page, pageSize, title, orderBy)
     }
 
-    fun getDirection(id: Int): Call<Direction> {
+    suspend fun getDirection(id: Int): Response<Direction> {
         return apiService.getDirection(id)
     }
 
-    fun createDirection(direction: Direction): Call<Direction> {
+    suspend fun createDirection(direction: Direction):Response<Direction> {
         return apiService.createDirection(direction)
     }
 
-    fun updateDirection(id: Int, direction: Direction): Call<Direction> {
+    suspend fun updateDirection(id: Int, direction: Direction): Response<Direction> {
         return apiService.updateDirection(id, direction)
     }
 
-    fun deleteDirection(id: Int): Call<Void> {
+    suspend fun deleteDirection(id: Int): Response<Void> {
         return apiService.deleteDirection(id)
     }
 

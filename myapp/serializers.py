@@ -31,7 +31,6 @@ class TeacherSerializer(serializers.ModelSerializer):
         user_data = validated_data.pop('user')
         user = instance.user
 
-        # Обновляем данные пользователя
         user.name = user_data.get('name', user.name)
         user.email = user_data.get('email', user.email)
         user.login = user_data.get('login', user.login)
@@ -43,7 +42,6 @@ class TeacherSerializer(serializers.ModelSerializer):
         user.role = user_data.get('role', user.role)
         user.save()
 
-        # Обновляем данные преподавателя
         instance.department = validated_data.get('department', instance.department)
         instance.year_of_start_of_work = validated_data.get('year_of_start_of_work', instance.year_of_start_of_work)
         instance.save()
