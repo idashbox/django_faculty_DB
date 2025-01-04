@@ -37,29 +37,51 @@ class TeacherViewModel(private val teacherRepository: TeacherRepository) : ViewM
 
     init {
         _pageSize.value = 10
-        fetchTeachers(orderBy = "id")
+        fetchTeachers(ordering = "id")
+        fetchStatistics()
+    }
+
+    // Переменные для хранения текущих фильтров
+    private var currentNameFilter: String? = null
+    private var currentSurnameFilter: String? = null
+    private var currentMiddleNameFilter: String? = null
+    private var currentBirthdayFilter: String? = null
+    private var currentDepartmentFilter: Int? = null
+    private var currentOrderBy: String? = "id"
+
+    init {
+        _pageSize.value = 10
+        fetchTeachers()
         fetchStatistics()
     }
 
     fun fetchTeachers(
-        nameFilter: String? = null,
-        surnameFilter: String? = null,
-        middleNameFilter: String? = null,
-        birthdayFilter: String? = null,
-        departmentFilter: Int? = null,
-        orderBy: String? = null
+        name: String? = null,
+        surname: String? = null,
+        middleName: String? = null,
+        birthday: String? = null,
+        email: String? = null,
+        login: String? = null,
+        sex: String? = null,
+        department: Int? = null,
+        yearOfStartOfWork: String? = null,
+        ordering: String? = null
     ) {
         viewModelScope.launch {
             try {
                 val response = teacherRepository.getTeachers(
-                    _currentPage,
-                    _pageSize.value ?: 10,
-                    nameFilter,
-                    surnameFilter,
-                    middleNameFilter,
-                    birthdayFilter,
-                    departmentFilter,
-                    orderBy
+                    page = _currentPage,
+                    pageSize = _pageSize.value ?: 10,
+                    name = name,
+                    surname = surname,
+                    middleName = middleName,
+                    birthday = birthday,
+                    email = email,
+                    login = login,
+                    sex = sex,
+                    department = department,
+                    yearOfStartOfWork = yearOfStartOfWork,
+                    ordering = ordering
                 )
                 if (response.isSuccessful) {
                     val teacherResponse = response.body()
@@ -73,12 +95,45 @@ class TeacherViewModel(private val teacherRepository: TeacherRepository) : ViewM
         }
     }
 
+
+    fun setFilter(
+        name: String? = null,
+        surname: String? = null,
+        middleName: String? = null,
+        birthday: String? = null,
+        departmentId: Int? = null,
+        orderBy: String? = null
+    ) {
+        currentNameFilter = name
+        currentSurnameFilter = surname
+        currentMiddleNameFilter = middleName
+        currentBirthdayFilter = birthday
+        currentDepartmentFilter = departmentId
+        currentOrderBy = orderBy
+
+        // Сбрасываем на первую страницу при изменении фильтра
+        _currentPage = 1
+        fetchTeachers()
+    }
+
+    fun clearFilters() {
+        currentNameFilter = null
+        currentSurnameFilter = null
+        currentMiddleNameFilter = null
+        currentBirthdayFilter = null
+        currentDepartmentFilter = null
+        currentOrderBy = "id"
+
+        _currentPage = 1
+        fetchTeachers()
+    }
+
     fun addTeacher(teacher: Teacher) {
         viewModelScope.launch {
             try {
                 val response = teacherRepository.createTeacher(teacher)
                 _isTeacherAdded.postValue(response.isSuccessful)
-                fetchTeachers(orderBy = "id")
+                fetchTeachers(ordering = "id")
             } catch (e: Exception) {
                 Log.e("TeacherViewModel", "Exception occurred: ${e.message}")
             }
@@ -90,7 +145,7 @@ class TeacherViewModel(private val teacherRepository: TeacherRepository) : ViewM
             try {
                 val response = teacherRepository.updateTeacher(teacherId, teacher)
                 _isTeacherUpdated.postValue(response.isSuccessful)
-                fetchTeachers(orderBy = "id")
+                fetchTeachers(ordering = "id")
             } catch (e: Exception) {
                 Log.e("TeacherViewModel", "Exception occurred: ${e.message}")
             }
@@ -102,7 +157,7 @@ class TeacherViewModel(private val teacherRepository: TeacherRepository) : ViewM
             try {
                 val response = teacherRepository.deleteTeacher(teacherId)
                 if (response.isSuccessful) {
-                    fetchTeachers(orderBy = "id")
+                    fetchTeachers(ordering = "id")
                 } else {
                     Log.e("TeacherViewModel", "Failed to delete teacher: ${response.errorBody()?.string()}")
                 }
@@ -114,13 +169,13 @@ class TeacherViewModel(private val teacherRepository: TeacherRepository) : ViewM
 
     fun nextPage() {
         _currentPage++
-        fetchTeachers(orderBy = "id")
+        fetchTeachers(ordering = "id")
     }
 
     fun previousPage() {
         if (_currentPage > 1) {
             _currentPage--
-            fetchTeachers(orderBy = "id")
+            fetchTeachers(ordering = "id")
         }
     }
 

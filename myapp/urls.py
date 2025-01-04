@@ -2,7 +2,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import UserViewSet, TeacherViewSet, DepartmentViewSet, UserDetailView, DepartmentDetailView, \
     TeacherDetailView, DirectionOfStudyViewSet, GroupViewSet, UserToGroupViewSet, DirectionOfStudyView, GroupView, \
-    UserToGroupView, StatisticsView, TeacherSearchView
+    UserToGroupView, StatisticsView, TeacherSearchView, TeacherFilteredViewSet, TeacherFilteredView, filter_teachers
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet)
@@ -11,6 +11,7 @@ router.register(r'departments', DepartmentViewSet)
 router.register(r'directions', DirectionOfStudyViewSet)
 router.register(r'groups', GroupViewSet)
 router.register(r'user_to_groups', UserToGroupViewSet)
+
 
 urlpatterns = [
     path('api/', include(router.urls)),
@@ -23,4 +24,5 @@ urlpatterns = [
     path('api/groups/<int:pk>/', GroupView.as_view(), name='group-detail'),
     path('api/user_to_groups/<int:pk>/', UserToGroupView.as_view(), name='user-to-group-detail'),
     path('api/statistics/', StatisticsView.as_view({'get': 'list'}), name='statistics'),
+    path('teachers/filtered/', TeacherFilteredView.as_view(), name='teacher-filtered-api')
 ]

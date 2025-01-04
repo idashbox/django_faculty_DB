@@ -49,13 +49,20 @@
             android:text="Поиск" />
 
         <Button
+            android:id="@+id/buttonFilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="Фильтр" />
+
+        <Button
             android:id="@+id/button_add_teacher"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Добавить нового преподавателя"
+            android:layout_marginBottom="16dp"
             android:backgroundTint="#B34DBA29"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="16dp" />
+            android:text="Добавить нового преподавателя"
+            android:textColor="@android:color/white" />
 
         <!-- RecyclerView -->
         <androidx.recyclerview.widget.RecyclerView
@@ -68,8 +75,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/buttonPreviousPage"

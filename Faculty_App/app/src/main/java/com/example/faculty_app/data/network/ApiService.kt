@@ -24,17 +24,23 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 interface ApiService {
 
-    @GET("api/teachers/")
+    @GET("teachers/filtered/")
     suspend fun getTeachers(
         @Query("page") page: Int,
         @Query("pageSize") pageSize: Int,
-        @Query("name") name: String?,
-        @Query("surname") surname: String?,
-        @Query("middle_name") middleName: String?,
-        @Query("birthday") birthday: String?,
-        @Query("department") department: Int?,
-        @Query("orderBy") orderBy: String?
+        @Query("orderBy") orderBy: String?,
+        @Query("user__name") name: String? = null,
+        @Query("user__surname") surname: String? = null,
+        @Query("user__middle_name") middleName: String? = null,
+        @Query("user__birthday") birthday: String? = null,
+        @Query("user__email") email: String? = null,
+        @Query("user__login") login: String? = null,
+        @Query("user__sex") sex: String? = null,
+        @Query("department") department: Int? = null,
+        @Query("year_of_start_of_work") yearOfStartOfWork: String? = null,
+        @Query("ordering") ordering: String? = null
     ): Response<TeacherResponse>
+
 
     @GET("teachers/search/")
     suspend fun searchTeachers(

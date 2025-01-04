@@ -19,11 +19,29 @@ class TeacherRepository {
         surname: String? = null,
         middleName: String? = null,
         birthday: String? = null,
+        email: String? = null,
+        login: String? = null,
+        sex: String? = null,
         department: Int? = null,
-        orderBy: String? = null
+        yearOfStartOfWork: String? = null,
+        ordering: String? = null
     ): Response<TeacherResponse> {
-        return apiService.getTeachers(page, pageSize, name, surname, middleName, birthday, department, orderBy)
+        return apiService.getTeachers(
+            page = page,
+            pageSize = pageSize,
+            orderBy = ordering,
+            name = name,
+            surname = surname,
+            middleName = middleName,
+            birthday = birthday,
+            email = email,
+            login = login,
+            sex = sex,
+            department = department,
+            yearOfStartOfWork = yearOfStartOfWork
+        )
     }
+
 
 
     suspend fun getTeacher(id: Int): Response<Teacher> {

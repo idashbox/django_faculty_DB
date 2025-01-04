@@ -1,10 +1,17 @@
 from django.db.models import Q
 from django.shortcuts import render
-from rest_framework import viewsets, generics
+from rest_framework import viewsets, generics, status
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from datetime import date
+
+from myapp.filters import TeacherFilter
+from myapp.forms import TeacherFilterForm
 from myapp.models import User, Teacher, Department, UserToGroup, Group, DirectionOfStudy, TeacherStatistics
 from myapp.serializers import UserSerializer, TeacherSerializer, DepartmentSerializer, UserToGroupSerializer, \
     GroupSerializer, DirectionOfStudySerializer, TeacherStatisticsSerializer
-from rest_framework import filters
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import OrderingFilter, SearchFilter
 
 
 def home(request):
@@ -64,6 +71,88 @@ class TeacherSearchView(generics.ListAPIView):
             )
         return Teacher.objects.none()
 
+
+class TeacherFilteredViewSet(viewsets.ModelViewSet):
+    queryset = Teacher.objects.all()
+    serializer_class = TeacherSerializer
+    filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
+    filterset_fields = ['user__name', 'user__surname', 'user__middle_name', 'user__birthday', 'user__email',
+                        'user__login', 'user__sex', 'department', 'year_of_start_of_work']
+    search_fields = ['user__name', 'user__surname', 'user__middle_name', 'user__email', 'user__login', 'user__sex']
+    ordering_fields = ['id', 'user__name', 'user__surname', 'user__birthday', 'year_of_start_of_work']
+
+    def get_queryset(self):
+        queryset = self.queryset
+        name = self.request.query_params.get('name')
+        surname = self.request.query_params.get('surname')
+        order_by = self.request.query_params.get('orderBy')
+        if name:
+            queryset = queryset.filter(Q(user__name__icontains=name))
+        if surname:
+            queryset = queryset.filter(Q(user__surname__icontains=surname))
+        if order_by:
+            valid_order_fields = ['id', 'user__name', 'user__surname', 'user__birthday']
+            if order_by in valid_order_fields:
+                queryset = queryset.order_by(order_by)
+            else:
+                raise ValueError(f"Invalid order_by field: {order_by}")
+        return queryset
+
+
+class TeacherFilteredView(generics.ListAPIView):
+    serializer_class = TeacherSerializer
+
+    def get_queryset(self):
+        queryset = Teacher.objects.all()
+
+        # Получаем параметры фильтрации
+        name = self.request.query_params.get('name', None)
+        surname = self.request.query_params.get('surname', None)
+        min_age = self.request.query_params.get('min_age', None)
+        max_age = self.request.query_params.get('max_age', None)
+        min_year_of_start = self.request.query_params.get('min_year_of_start', None)
+        max_year_of_start = self.request.query_params.get('max_year_of_start', None)
+        gender = self.request.query_params.get('sex', None)
+
+        # Фильтрация по имени и фамилии
+        if name:
+            queryset = queryset.filter(Q(user__name__icontains=name))
+        if surname:
+            queryset = queryset.filter(Q(user__surname__icontains=surname))
+
+        # Фильтрация по диапазону возраста (по дате рождения)
+        if min_age or max_age:
+            today = date.today()
+            if min_age:
+                min_date = today.replace(year=today.year - int(min_age))
+                queryset = queryset.filter(user__birthday__lte=min_date)
+            if max_age:
+                max_date = today.replace(year=today.year - int(max_age))
+                queryset = queryset.filter(user__birthday__gte=max_date)
+
+        # Фильтрация по году начала работы
+        if min_year_of_start:
+            queryset = queryset.filter(year_of_start_of_work__gte=min_year_of_start)
+        if max_year_of_start:
+            queryset = queryset.filter(year_of_start_of_work__lte=max_year_of_start)
+
+        # Фильтрация по полу (gender)
+        if gender:
+            if gender not in ['Male', 'Female']:
+                return Response({"error": "Invalid gender. Choose 'male' or 'female'."}, status=status.HTTP_400_BAD_REQUEST)
+            queryset = queryset.filter(user__sex=gender)
+
+        return queryset
+
+
+@api_view(['GET'])
+def filter_teachers(request):
+    form = TeacherFilterForm(request.GET or None)
+    if form.is_valid():
+        teachers = form.filter_teachers()
+        serializer = TeacherSerializer(teachers, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class StatisticsView(viewsets.ReadOnlyModelViewSet):
     queryset = TeacherStatistics.objects.all()

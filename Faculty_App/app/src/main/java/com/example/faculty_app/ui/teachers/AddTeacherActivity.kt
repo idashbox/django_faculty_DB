@@ -137,7 +137,7 @@ class AddTeacherActivity : AppCompatActivity() {
         }
 
         if (gender.isEmpty()) {
-            showToast("Please select a gender!")
+            showToast("Please select a sex!")
             return
         }
 

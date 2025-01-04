@@ -160,19 +160,19 @@ class EditTeacherActivity : AppCompatActivity() {
         Log.d(TAG, "UpdateTeacher: name=$name, surname=$surname, email=$email, department=$selectedDepartmentId")
 
         if (name.isEmpty() || surname.isEmpty() || middleName.isEmpty() || email.isEmpty() || login.isEmpty() || password.isEmpty() || yearsOfWork.isEmpty()) {
-            Log.e(TAG, "All fields must be filled!") // Логируем ошибку
+            Log.e(TAG, "All fields must be filled!")
             Toast.makeText(this, "All fields must be filled!", Toast.LENGTH_SHORT).show()
             return
         }
 
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            Log.e(TAG, "Invalid email address: $email") // Логируем ошибку
+            Log.e(TAG, "Invalid email address: $email")
             Toast.makeText(this, "Invalid email address!", Toast.LENGTH_SHORT).show()
             return
         }
 
         if (selectedDepartmentId == 0) {
-            Log.e(TAG, "Department not selected") // Логируем ошибку
+            Log.e(TAG, "Department not selected")
             Toast.makeText(this, "Please select a department!", Toast.LENGTH_SHORT).show()
             return
         }
@@ -184,7 +184,7 @@ class EditTeacherActivity : AppCompatActivity() {
         }
 
         if (gender.isEmpty()) {
-            Log.e(TAG, "Gender not selected") // Логируем ошибку
+            Log.e(TAG, "Gender not selected")
             Toast.makeText(this, "Please select a gender!", Toast.LENGTH_SHORT).show()
             return
         }
@@ -209,19 +209,18 @@ class EditTeacherActivity : AppCompatActivity() {
             year_of_start_of_work = yearsOfWork
         )
 
-        Log.d(TAG, "Sending update request for teacher ID: $teacherId") // Логируем отправку запроса
+        Log.d(TAG, "Sending update request for teacher ID: $teacherId")
 
         teacherViewModel.updateTeacher(teacherId, teacherUpdateRequest)
 
-        // Логирование в случае успешного или неуспешного обновления
         teacherViewModel.isTeacherUpdated.observe(this, Observer { isUpdated ->
             if (isUpdated) {
-                Log.d(TAG, "Teacher updated successfully") // Логируем успешное обновление
+                Log.d(TAG, "Teacher updated successfully")
                 Toast.makeText(this, "Teacher updated successfully", Toast.LENGTH_SHORT).show()
                 setResult(RESULT_OK)
                 finish()
             } else {
-                Log.e(TAG, "Error updating teacher") // Логируем ошибку
+                Log.e(TAG, "Error updating teacher")
                 Toast.makeText(this, "Error updating teacher", Toast.LENGTH_SHORT).show()
             }
         })

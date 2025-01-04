@@ -1,0 +1,76 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Возраст (от - до)" />
+
+        <EditText
+            android:id="@+id/editTextMinAge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Минимальный возраст" />
+
+        <EditText
+            android:id="@+id/editTextMaxAge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Максимальный возраст" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Год начала работы (от - до)" />
+
+        <EditText
+            android:id="@+id/editTextMinYearStart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Минимальный год" />
+
+        <EditText
+            android:id="@+id/editTextMaxYearStart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Максимальный год" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Пол" />
+
+        <RadioGroup
+            android:id="@+id/radioGroupSex"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radioButtonMale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Мужчина" />
+
+            <RadioButton
+                android:id="@+id/radioButtonFemale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Женщина" />
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/buttonApplyFilters"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Применить фильтры" />
+    </LinearLayout>
+</ScrollView>
