@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FDF5D3">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <!-- Фильтры -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="#FFFFFF">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- Возраст -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Возраст (от - до)"
+                    android:textSize="16sp"
+                    android:textColor="#333333" />
+
+                <EditText
+                    android:id="@+id/editTextMinAge"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Минимальный возраст"
+                    android:padding="12dp"
+                    android:backgroundTint="#4DBA29" />
+
+                <EditText
+                    android:id="@+id/editTextMaxAge"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Максимальный возраст"
+                    android:padding="12dp"
+                    android:backgroundTint="#4DBA29"
+                    android:layout_marginTop="8dp" />
+
+                <!-- Год начала работы -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Год начала работы (от - до)"
+                    android:textSize="16sp"
+                    android:textColor="#333333"
+                    android:layout_marginTop="16dp" />
+
+                <EditText
+                    android:id="@+id/editTextMinYearStart"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Минимальный год"
+                    android:padding="12dp"
+                    android:backgroundTint="#4DBA29" />
+
+                <EditText
+                    android:id="@+id/editTextMaxYearStart"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Максимальный год"
+                    android:padding="12dp"
+                    android:backgroundTint="#4DBA29"
+                    android:layout_marginTop="8dp" />
+
+                <!-- Пол -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Пол"
+                    android:textSize="16sp"
+                    android:textColor="#333333"
+                    android:layout_marginTop="16dp" />
+
+                <RadioGroup
+                    android:id="@+id/radioGroupSex"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/radioButtonMale"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Мужчина"
+                        android:textSize="14sp" />
+
+                    <RadioButton
+                        android:id="@+id/radioButtonFemale"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Женщина"
+                        android:textSize="14sp" />
+                </RadioGroup>
+
+                <!-- Кнопка применения фильтров -->
+                <Button
+                    android:id="@+id/buttonApplyFilters"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:backgroundTint="#4DBA29"
+                    android:text="Применить фильтры"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

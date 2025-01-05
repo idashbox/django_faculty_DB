@@ -24,6 +24,10 @@ class TeacherRepository {
         sex: String? = null,
         department: Int? = null,
         yearOfStartOfWork: String? = null,
+        minAge: Int? = null,
+        maxAge: Int? = null,
+        minYearStart: Int? = null,
+        maxYearStart: Int? = null,
         ordering: String? = null
     ): Response<TeacherResponse> {
         return apiService.getTeachers(
@@ -38,7 +42,11 @@ class TeacherRepository {
             login = login,
             sex = sex,
             department = department,
-            yearOfStartOfWork = yearOfStartOfWork
+            yearOfStartOfWork = yearOfStartOfWork,
+            minAge = minAge,
+            maxAge = maxAge,
+            minYearStart = minYearStart,
+            maxYearStart = maxYearStart
         )
     }
 

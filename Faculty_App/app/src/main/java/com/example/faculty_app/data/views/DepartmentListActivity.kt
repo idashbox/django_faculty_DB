@@ -23,7 +23,6 @@ class DepartmentListActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: DepartmentAdapter
-//    private lateinit var searchEditText: EditText
     private val departmentRepository: DepartmentRepository by lazy {
         DepartmentRepository()
     }

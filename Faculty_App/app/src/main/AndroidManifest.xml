@@ -64,6 +64,8 @@
 
         <activity android:name=".ui.directions.AddDirectionActivity"/>
 
+        <activity android:name=".ui.filter.FilterActivity" />
+
     </application>
 
 </manifest>

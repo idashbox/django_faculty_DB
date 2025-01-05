@@ -65,6 +65,10 @@ class TeacherViewModel(private val teacherRepository: TeacherRepository) : ViewM
         sex: String? = null,
         department: Int? = null,
         yearOfStartOfWork: String? = null,
+        minAge: Int? = null,
+        maxAge: Int? = null,
+        minYearStart: Int? = null,
+        maxYearStart: Int? = null,
         ordering: String? = null
     ) {
         viewModelScope.launch {
@@ -81,6 +85,10 @@ class TeacherViewModel(private val teacherRepository: TeacherRepository) : ViewM
                     sex = sex,
                     department = department,
                     yearOfStartOfWork = yearOfStartOfWork,
+                    minAge = minAge,
+                    maxAge = maxAge,
+                    minYearStart = minYearStart,
+                    maxYearStart = maxYearStart,
                     ordering = ordering
                 )
                 if (response.isSuccessful) {

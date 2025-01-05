@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="#FDF5D3">
 
+    <!-- Верхний бар -->
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,11 +16,11 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#B34DBA29"
+            android:background="#4DBA29"
             android:theme="@style/ThemeOverlay.MaterialComponents.ActionBar"
             app:navigationIcon="@drawable/ic_arrow_back"
             app:title="Преподаватели"
-            app:titleTextColor="#852E2C1B" />
+            app:titleTextColor="@android:color/white" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
@@ -29,49 +30,94 @@
         android:padding="16dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <!-- Фильтры -->
-        <EditText
-            android:id="@+id/editTextSearch"
+        <!-- Секция поиска и фильтров -->
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Поиск" />
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="#FFFFFF">
 
-        <Spinner
-            android:id="@+id/spinnerFilter"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Выберите фильтр" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
 
-        <Button
-            android:id="@+id/buttonSearch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Поиск" />
+                <!-- Поле поиска -->
+                <EditText
+                    android:id="@+id/editTextSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Введите имя преподавателя"
+                    android:padding="12dp"
+                    android:backgroundTint="#4DBA29"
+                    android:drawableLeft="@drawable/ic_search"
+                    android:drawablePadding="8dp" />
 
-        <Button
-            android:id="@+id/buttonFilter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="Фильтр" />
+                <!-- Кнопка поиска -->
+                <Button
+                    android:id="@+id/buttonSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:backgroundTint="#4DBA29"
+                    android:text="Найти"
+                    android:textColor="@android:color/white" />
 
+                <!-- Выпадающий список фильтров -->
+                <Spinner
+                    android:id="@+id/spinnerFilter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:padding="12dp"
+                    android:backgroundTint="#E0E0E0"
+                    android:spinnerMode="dropdown" />
+
+                <!-- Кнопки фильтрации -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <Button
+                        android:id="@+id/buttonFilter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:backgroundTint="#4DBA29"
+                        android:text="Выбрать фильтр"
+                        android:textColor="@android:color/white" />
+
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Кнопка добавления преподавателя -->
         <Button
             android:id="@+id/button_add_teacher"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:backgroundTint="#B34DBA29"
+            android:backgroundTint="#4DBA29"
             android:text="Добавить нового преподавателя"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:padding="12dp" />
 
-        <!-- RecyclerView -->
+        <!-- Список преподавателей -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:layout_marginBottom="16dp"
+            android:padding="8dp" />
 
-        <!-- Постраничный вывод -->
+        <!-- Навигация по страницам -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -82,13 +128,18 @@
                 android:id="@+id/buttonPreviousPage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Предыдущая" />
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="#4DBA29"
+                android:text="Предыдущая"
+                android:textColor="@android:color/white" />
 
             <Button
                 android:id="@+id/buttonNextPage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Следующая" />
+                android:backgroundTint="#4DBA29"
+                android:text="Следующая"
+                android:textColor="@android:color/white" />
         </LinearLayout>
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

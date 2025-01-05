@@ -105,22 +105,32 @@ class TeacherFilteredView(generics.ListAPIView):
     def get_queryset(self):
         queryset = Teacher.objects.all()
 
-        # Получаем параметры фильтрации
-        name = self.request.query_params.get('name', None)
-        surname = self.request.query_params.get('surname', None)
+        name = self.request.query_params.get('name')
+        surname = self.request.query_params.get('surname')
+        order_by = self.request.query_params.get('orderBy')
+        if name:
+            queryset = queryset.filter(Q(user__name__icontains=name))
+        if surname:
+            queryset = queryset.filter(Q(user__surname__icontains=surname))
+        if order_by:
+            valid_order_fields = ['id', 'user__name', 'user__surname', 'user__birthday']
+            if order_by in valid_order_fields:
+                queryset = queryset.order_by(order_by)
+            else:
+                raise ValueError(f"Invalid order_by field: {order_by}")
+
         min_age = self.request.query_params.get('min_age', None)
         max_age = self.request.query_params.get('max_age', None)
         min_year_of_start = self.request.query_params.get('min_year_of_start', None)
         max_year_of_start = self.request.query_params.get('max_year_of_start', None)
         gender = self.request.query_params.get('sex', None)
 
-        # Фильтрация по имени и фамилии
-        if name:
-            queryset = queryset.filter(Q(user__name__icontains=name))
-        if surname:
-            queryset = queryset.filter(Q(user__surname__icontains=surname))
+        # # Фильтрация по имени и фамилии
+        # if name:
+        #     queryset = queryset.filter(Q(user__name__icontains=name))
+        # if surname:
+        #     queryset = queryset.filter(Q(user__surname__icontains=surname))
 
-        # Фильтрация по диапазону возраста (по дате рождения)
         if min_age or max_age:
             today = date.today()
             if min_age:

@@ -35,7 +35,11 @@ interface ApiService {
         @Query("user__birthday") birthday: String? = null,
         @Query("user__email") email: String? = null,
         @Query("user__login") login: String? = null,
-        @Query("user__sex") sex: String? = null,
+        @Query("sex") sex: String? = null,
+        @Query("min_age") minAge: Int? = null,
+        @Query("max_age") maxAge: Int? = null,
+        @Query("min_year_of_start") minYearStart: Int? = null,
+        @Query("max_year_of_start") maxYearStart: Int? = null,
         @Query("department") department: Int? = null,
         @Query("year_of_start_of_work") yearOfStartOfWork: String? = null,
         @Query("ordering") ordering: String? = null

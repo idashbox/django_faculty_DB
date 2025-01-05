@@ -54,7 +54,6 @@ class TeacherAdapter(private val viewModel: TeacherViewModel) : ListAdapter<Teac
                 (itemView.context as Activity).startActivityForResult(intent, 2)
             }
 
-            // Обработчик для кнопки удаления
             deleteButton.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
@@ -63,7 +62,7 @@ class TeacherAdapter(private val viewModel: TeacherViewModel) : ListAdapter<Teac
                         .setTitle("Подтверждение удаления")
                         .setMessage("Вы уверены, что хотите удалить пользователя ${teacher.user.name}?")
                         .setPositiveButton("Да") { _, _ ->
-                            viewModel.deleteTeacher(teacher.id) // Вызов метода удаления в ViewModel
+                            viewModel.deleteTeacher(teacher.id)
                         }
                         .setNegativeButton("Нет", null)
                         .show()

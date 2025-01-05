@@ -15,10 +15,10 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#B34DBA29"
+            android:background="#4DBA29"
             android:theme="@style/ThemeOverlay.MaterialComponents.ActionBar"
             app:title="Выберите таблицу с данными"
-            app:titleTextColor="#852E2C1B" />
+            app:titleTextColor="@android:color/white" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
@@ -26,58 +26,135 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="16dp"
+        android:background="#FDF5D3"
+        android:layout_marginTop="16dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <Button
-            android:id="@+id/button_users"
+        <!-- Группа кнопок на одном уровне -->
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Список пользователей"
-            android:backgroundTint="#B34DBA29"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="16dp" />
-        <Button
-            android:id="@+id/button_teachers"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Список преподавателей"
-            android:backgroundTint="#B34DBA29"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="16dp" />
-        <Button
-            android:id="@+id/button_departments"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Список кафедр"
-            android:backgroundTint="#B34DBA29"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="16dp" />
-        <Button
-            android:id="@+id/button_user_to_group"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Список студентов"
-            android:backgroundTint="#B34DBA29"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="16dp" />
-        <Button
-            android:id="@+id/button_groups"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Список групп"
-            android:backgroundTint="#B34DBA29"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="16dp" />
-        <Button
-            android:id="@+id/button_directions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Список направлений обучения"
-            android:backgroundTint="#B34DBA29"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="16dp" />
+            android:layout_height="69dp"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
 
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="#B34DBA29">
+
+                <Button
+                    android:id="@+id/button_users"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:text="Список пользователей"
+                    android:textColor="@android:color/white" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="#B34DBA29">
+
+                <Button
+                    android:id="@+id/button_teachers"
+                    android:layout_width="match_parent"
+                    android:layout_height="67dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:text="Список преподавателей"
+                    android:textColor="@android:color/white" />
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+
+        <!-- Вторая группа кнопок -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="69dp"
+                android:layout_weight="1"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="#B34DBA29">
+
+                <Button
+                    android:id="@+id/button_departments"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:text="Список кафедр"
+                    android:textColor="@android:color/white" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="#B34DBA29">
+
+                <Button
+                    android:id="@+id/button_user_to_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="71dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:text="Список студентов"
+                    android:textColor="@android:color/white" />
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+
+        <!-- Третья группа кнопок -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="69dp"
+            android:layout_marginBottom="16dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:cardBackgroundColor="#B34DBA29"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp">
+
+                <Button
+                    android:id="@+id/button_groups"
+                    android:layout_width="match_parent"
+                    android:layout_height="72dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:text="Список групп"
+                    android:textColor="@android:color/white" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:cardBackgroundColor="#B34DBA29"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp">
+
+                <Button
+                    android:id="@+id/button_directions"
+                    android:layout_width="match_parent"
+                    android:layout_height="72dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:text="Список направлений"
+                    android:textColor="@android:color/white" />
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
 
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
-

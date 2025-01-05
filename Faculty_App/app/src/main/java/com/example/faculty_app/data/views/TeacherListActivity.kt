@@ -15,8 +15,9 @@ import com.example.faculty_app.data.factories.TeacherViewModelFactory
 import com.example.faculty_app.data.view_models.TeacherViewModel
 import com.example.faculty_app.data.repositories.TeacherRepository
 import com.example.faculty_app.ui.teachers.AddTeacherActivity
+import com.example.faculty_app.ui.filter.FilterBottomSheet
 
-class TeacherListActivity : AppCompatActivity() {
+class TeacherListActivity : AppCompatActivity(), FilterBottomSheet.OnFilterApplyListener {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: TeacherAdapter
@@ -25,6 +26,8 @@ class TeacherListActivity : AppCompatActivity() {
     private lateinit var buttonPreviousPage: Button
     private lateinit var buttonNextPage: Button
     private lateinit var buttonSearch: Button
+    private lateinit var buttonFilter: Button
+    private var isFilterApplied = false
 
     private val teacherRepository: TeacherRepository by lazy {
         TeacherRepository()
@@ -48,6 +51,7 @@ class TeacherListActivity : AppCompatActivity() {
         buttonPreviousPage = findViewById(R.id.buttonPreviousPage)
         buttonNextPage = findViewById(R.id.buttonNextPage)
         buttonSearch = findViewById(R.id.buttonSearch)
+        buttonFilter = findViewById(R.id.buttonFilter)
 
         val filterOptions = arrayOf("Имя", "Фамилия", "Отчество", "Дата рождения")
         val filterAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, filterOptions)
@@ -63,17 +67,23 @@ class TeacherListActivity : AppCompatActivity() {
             adapter.submitList(it)
         })
 
+        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
+        toolbar.setNavigationOnClickListener {
+            onBackPressed()
+        }
+
         spinnerFilter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parentView: AdapterView<*>, view: android.view.View, position: Int, id: Long) {
                 val selectedFilter = filterOptions[position]
-                val orderBy = when (selectedFilter) {
-                    "Имя" -> "user__name"
-                    "Фамилия" -> "user__surname"
-                    "Отчество" -> "user__middle_name"
-                    "Дата рождения" -> "user__birthday"
-                    else -> null
+                when (selectedFilter) {
+                    "Имя" -> teacherViewModel.fetchTeachers(ordering = "user__name")
+                    "Фамилия" -> teacherViewModel.fetchTeachers(ordering = "user__surname")
+                    "Отчество" -> teacherViewModel.fetchTeachers(ordering = "user__middle_name")
+                    "Дата рождения" -> teacherViewModel.fetchTeachers(ordering = "user__birthday")
                 }
-                teacherViewModel.fetchTeachers(ordering = orderBy)
+                teacherViewModel.fetchTeachers()
             }
 
             override fun onNothingSelected(parentView: AdapterView<*>) {}
@@ -89,27 +99,37 @@ class TeacherListActivity : AppCompatActivity() {
 
         buttonSearch.setOnClickListener {
             val searchQuery = editTextSearch.text.toString().trim()
-            teacherViewModel.fetchTeachers(name = searchQuery)
+            teacherViewModel.searchTeachers(searchQuery)
+        }
+
+        buttonFilter.setOnClickListener {
+            if (isFilterApplied) {
+                isFilterApplied = false
+                buttonFilter.text = "Фильтр"
+                teacherViewModel.fetchTeachers()
+            } else {
+                val bottomSheet = FilterBottomSheet(this)
+                bottomSheet.show(supportFragmentManager, FilterBottomSheet.TAG)
+            }
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == FILTER_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
-            val minAge = data.getIntExtra("minAge", -1).takeIf { it != -1 }
-            val maxAge = data.getIntExtra("maxAge", -1).takeIf { it != -1 }
-            val minYearStart = data.getIntExtra("minYearStart", -1).takeIf { it != -1 }
-            val maxYearStart = data.getIntExtra("maxYearStart", -1).takeIf { it != -1 }
-            val sex = data.getStringExtra("sex")
+    override fun onFilterApplied(
+        minAge: Int?,
+        maxAge: Int?,
+        minYearStart: Int?,
+        maxYearStart: Int?,
+        sex: String?
+    ) {
+        isFilterApplied = true
+        buttonFilter.text = "Х Убрать Фильтр"
 
-            teacherViewModel.fetchTeachers(
-                sex = sex,
-                yearOfStartOfWork = minYearStart?.toString() ?: maxYearStart?.toString()
-            )
-        }
-    }
-
-    companion object {
-        private const val FILTER_REQUEST_CODE = 100
+        teacherViewModel.fetchTeachers(
+            minAge = minAge,
+            maxAge = maxAge,
+            minYearStart = minYearStart,
+            maxYearStart = maxYearStart,
+            sex = sex
+        )
     }
 }

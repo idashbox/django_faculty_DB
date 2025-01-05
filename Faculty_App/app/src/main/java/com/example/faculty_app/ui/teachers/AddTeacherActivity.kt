@@ -73,6 +73,13 @@ class AddTeacherActivity : AppCompatActivity() {
             }
         })
 
+        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
+        toolbar.setNavigationOnClickListener {
+            onBackPressed()
+        }
+
         val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
             selectedBirthday.set(Calendar.YEAR, year)
             selectedBirthday.set(Calendar.MONTH, month)
