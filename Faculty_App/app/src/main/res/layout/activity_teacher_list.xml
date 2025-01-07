@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FDF5D3">
+    android:background="#201E21">
 
     <!-- Верхний бар -->
     <com.google.android.material.appbar.AppBarLayout
@@ -16,11 +16,11 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#4DBA29"
+            android:background="#EFD056"
             android:theme="@style/ThemeOverlay.MaterialComponents.ActionBar"
             app:navigationIcon="@drawable/ic_arrow_back"
             app:title="Преподаватели"
-            app:titleTextColor="@android:color/white" />
+            app:titleTextColor="#201E21" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
@@ -37,7 +37,7 @@
             android:layout_marginBottom="16dp"
             app:cardCornerRadius="8dp"
             app:cardElevation="4dp"
-            app:cardBackgroundColor="#FFFFFF">
+            app:cardBackgroundColor="#E0DFDF">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -52,7 +52,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Введите имя преподавателя"
                     android:padding="12dp"
-                    android:backgroundTint="#4DBA29"
+                    android:backgroundTint="#EFD056"
                     android:drawableLeft="@drawable/ic_search"
                     android:drawablePadding="8dp" />
 
@@ -62,9 +62,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:backgroundTint="#4DBA29"
+                    android:backgroundTint="#EFD056"
                     android:text="Найти"
-                    android:textColor="@android:color/white" />
+                    android:textColor="#201E21" />
 
                 <!-- Выпадающий список фильтров -->
                 <Spinner
@@ -73,7 +73,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:padding="12dp"
-                    android:backgroundTint="#E0E0E0"
+                    android:backgroundTint="#E0DFDF"
                     android:spinnerMode="dropdown" />
 
                 <!-- Кнопки фильтрации -->
@@ -89,9 +89,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
-                        android:backgroundTint="#4DBA29"
+                        android:backgroundTint="#EFD056"
                         android:text="Выбрать фильтр"
-                        android:textColor="@android:color/white" />
+                        android:textColor="#201E21" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -103,9 +103,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:backgroundTint="#4DBA29"
+            android:backgroundTint="#EFD056"
             android:text="Добавить нового преподавателя"
-            android:textColor="@android:color/white"
+            android:textColor="#201E21"
             android:padding="12dp" />
 
         <!-- Список преподавателей -->
@@ -115,7 +115,8 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:layout_marginBottom="16dp"
-            android:padding="8dp" />
+            android:padding="8dp"
+            app:cardBackgroundColor="#CAC6C6"/>
 
         <!-- Навигация по страницам -->
         <LinearLayout
@@ -129,17 +130,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:backgroundTint="#4DBA29"
+                android:backgroundTint="#EFD056"
                 android:text="Предыдущая"
-                android:textColor="@android:color/white" />
+                android:textColor="#201E21" />
 
             <Button
                 android:id="@+id/buttonNextPage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="#4DBA29"
+                android:backgroundTint="#EFD056"
                 android:text="Следующая"
-                android:textColor="@android:color/white" />
+                android:textColor="#201E21" />
         </LinearLayout>
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

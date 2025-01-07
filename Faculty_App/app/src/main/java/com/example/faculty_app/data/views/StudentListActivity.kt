@@ -7,9 +7,8 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.faculty_app.R
-import com.example.faculty_app.StudentAdapter
+import com.example.faculty_app.ui.adapters.StudentAdapter
 import com.example.faculty_app.data.factories.GroupViewModelFactory
-import com.example.faculty_app.data.network.RetrofitClient
 import com.example.faculty_app.data.repositories.GroupRepository
 import com.example.faculty_app.data.view_models.GroupViewModel
 

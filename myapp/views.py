@@ -2,11 +2,8 @@ from django.db.models import Q
 from django.shortcuts import render
 from rest_framework import viewsets, generics, status
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
 from datetime import date
 
-from myapp.filters import TeacherFilter
-from myapp.forms import TeacherFilterForm
 from myapp.models import User, Teacher, Department, UserToGroup, Group, DirectionOfStudy, TeacherStatistics
 from myapp.serializers import UserSerializer, TeacherSerializer, DepartmentSerializer, UserToGroupSerializer, \
     GroupSerializer, DirectionOfStudySerializer, TeacherStatisticsSerializer
@@ -21,6 +18,28 @@ def home(request):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
+    filterset_fields = ['name', 'surname', 'middle_name', 'birthday', 'email',
+                        'login', 'sex']
+    search_fields = ['name', 'surname', 'middle_name', 'email', 'login', 'sex']
+    ordering_fields = ['id', 'name', 'surname', 'birthday']
+
+    def get_queryset(self):
+        queryset = self.queryset
+        name = self.request.query_params.get('name')
+        surname = self.request.query_params.get('surname')
+        order_by = self.request.query_params.get('orderBy')
+        if name:
+            queryset = queryset.filter(Q(user__name__icontains=name))
+        if surname:
+            queryset = queryset.filter(Q(user__surname__icontains=surname))
+        if order_by:
+            valid_order_fields = ['id', 'name', 'surname', 'birthday']
+            if order_by in valid_order_fields:
+                queryset = queryset.order_by(order_by)
+            else:
+                raise ValueError(f"Invalid order_by field: {order_by}")
+        return queryset
 
 
 class TeacherViewSet(viewsets.ModelViewSet):
@@ -70,6 +89,21 @@ class TeacherSearchView(generics.ListAPIView):
                 Q(user__birthday__icontains=query)
             )
         return Teacher.objects.none()
+
+
+class UserSearchView(generics.ListAPIView):
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        query = self.request.query_params.get('query', '')
+        if query:
+            return User.objects.filter(
+                Q(name__icontains=query) |
+                Q(surname__icontains=query) |
+                Q(middle_name__icontains=query) |
+                Q(birthday__icontains=query)
+            )
+        return User.objects.none()
 
 
 class TeacherFilteredViewSet(viewsets.ModelViewSet):
@@ -125,12 +159,6 @@ class TeacherFilteredView(generics.ListAPIView):
         max_year_of_start = self.request.query_params.get('max_year_of_start', None)
         gender = self.request.query_params.get('sex', None)
 
-        # # Фильтрация по имени и фамилии
-        # if name:
-        #     queryset = queryset.filter(Q(user__name__icontains=name))
-        # if surname:
-        #     queryset = queryset.filter(Q(user__surname__icontains=surname))
-
         if min_age or max_age:
             today = date.today()
             if min_age:
@@ -154,15 +182,6 @@ class TeacherFilteredView(generics.ListAPIView):
 
         return queryset
 
-
-@api_view(['GET'])
-def filter_teachers(request):
-    form = TeacherFilterForm(request.GET or None)
-    if form.is_valid():
-        teachers = form.filter_teachers()
-        serializer = TeacherSerializer(teachers, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class StatisticsView(viewsets.ReadOnlyModelViewSet):
     queryset = TeacherStatistics.objects.all()
@@ -231,6 +250,7 @@ class UserToGroupViewSet(viewsets.ModelViewSet):
                 raise ValueError(f"Invalid order_by field: {order_by}")
 
         return queryset
+
 
 class DirectionOfStudyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = DirectionOfStudy.objects.all()

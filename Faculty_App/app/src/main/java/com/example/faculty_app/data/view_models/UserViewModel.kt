@@ -29,20 +29,36 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
 
     init {
         _pageSize.value = 10
-        fetchUsers(orderBy = "id")
+        fetchUsers(ordering = "id")
     }
 
     fun fetchUsers(
-        nameFilter: String? = null,
-        orderBy: String? = null
+        name: String? = null,
+        surname: String? = null,
+        middleName: String? = null,
+        birthday: String? = null,
+        email: String? = null,
+        login: String? = null,
+        sex: String? = null,
+        minAge: Int? = null,
+        maxAge: Int? = null,
+        ordering: String? = null
     ) {
         viewModelScope.launch {
             try {
                 val response = userRepository.getUsers(
-                    _currentPage,
-                    _pageSize.value ?: 10,
-                    nameFilter,
-                    orderBy
+                    page = _currentPage,
+                    pageSize = _pageSize.value ?: 10,
+                    name = name,
+                    surname = surname,
+                    middleName = middleName,
+                    birthday = birthday,
+                    email = email,
+                    login = login,
+                    sex = sex,
+                    minAge = minAge,
+                    maxAge = maxAge,
+                    ordering = ordering
                 )
                 if (response.isSuccessful) {
                     val userResponse = response.body()
@@ -61,7 +77,7 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
             try {
                 val response = userRepository.createUser(user)
                 _isUserAdded.postValue(response.isSuccessful)
-                fetchUsers(orderBy = "id")
+                fetchUsers(ordering = "id")
             } catch (e: Exception) {
                 Log.e("UserViewModel", "Exception occurred: ${e.message}")
             }
@@ -73,7 +89,7 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
             try {
                 val response = userRepository.updateUser(userId, user)
                 _isUserUpdated.postValue(response.isSuccessful)
-                fetchUsers(orderBy = "id")
+                fetchUsers(ordering = "id")
             } catch (e: Exception) {
                 Log.e("UserViewModel", "Exception occurred: ${e.message}")
             }
@@ -85,7 +101,7 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
             try {
                 val response = userRepository.deleteUser(userId)
                 if (response.isSuccessful) {
-                    fetchUsers(orderBy = "id")
+                    fetchUsers(ordering = "id")
                 } else {
                     Log.e("UserViewModel", "Failed to delete user: ${response.errorBody()?.string()}")
                 }
@@ -95,15 +111,35 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
         }
     }
 
+    fun searchUsers(query: String) {
+        viewModelScope.launch {
+            try {
+                val response = userRepository.searchUsers(
+                    _currentPage,
+                    _pageSize.value ?: 10,
+                    query
+                )
+                if (response.isSuccessful) {
+                    val userResponse = response.body()
+                    _users.postValue(userResponse?.results ?: emptyList())
+                } else {
+                    Log.e("USerViewModel", "Failed to search users: ${response.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                Log.e("UserViewModel", "Exception occurred: ${e.message}")
+            }
+        }
+    }
+
     fun nextPage() {
         _currentPage++
-        fetchUsers(orderBy = "id")
+        fetchUsers(ordering = "id")
     }
 
     fun previousPage() {
         if (_currentPage > 1) {
             _currentPage--
-            fetchUsers(orderBy = "id")
+            fetchUsers(ordering = "id")
         }
     }
 }

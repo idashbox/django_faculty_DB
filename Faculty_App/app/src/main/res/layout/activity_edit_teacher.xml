@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FDF5D3">
+    android:background="#E0DBE2">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -15,11 +15,11 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#B34DBA29"
+            android:background="#EFD056"
             android:theme="@style/ThemeOverlay.MaterialComponents.ActionBar"
             app:navigationIcon="@drawable/ic_arrow_back"
-            app:title="Редактировать преподавателя"
-            app:titleTextColor="#852E2C1B" />
+            app:title="Редактирование преподавателя"
+            app:titleTextColor="#201E21" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <ScrollView
@@ -34,7 +34,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Поля ввода данных -->
             <EditText
                 android:id="@+id/editTextSurname"
                 android:layout_width="match_parent"
@@ -95,33 +94,33 @@
                 android:id="@+id/editTextLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Логин" />
+                android:hint="Логин"/>
 
             <EditText
                 android:id="@+id/editTextPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Пароль" />
+                android:hint="Пароль"/>
 
             <Spinner
                 android:id="@+id/spinnerDepartment"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Выберите кафедру" />
+                android:layout_height="wrap_content" />
 
             <EditText
                 android:id="@+id/editTextYearsOfWork"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Год начала работы" />
+                android:hint="Год начала работы"
+                android:textColorHint="#E0DBE2"/>
 
             <Button
                 android:id="@+id/buttonSave"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Сохранить"
-                android:backgroundTint="#B34DBA29"
-                android:textColor="@color/white" />
+                android:backgroundTint="#EFD056"
+                android:textColor="#201E21" />
         </LinearLayout>
     </ScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

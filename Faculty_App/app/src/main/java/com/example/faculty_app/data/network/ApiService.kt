@@ -45,7 +45,6 @@ interface ApiService {
         @Query("ordering") ordering: String? = null
     ): Response<TeacherResponse>
 
-
     @GET("teachers/search/")
     suspend fun searchTeachers(
         @Query("page") page: Int,
@@ -72,8 +71,24 @@ interface ApiService {
     suspend fun getUsers(
         @Query("page") page: Int,
         @Query("pageSize") pageSize: Int,
+        @Query("orderBy") orderBy: String?,
         @Query("name") name: String? = null,
-        @Query("orderBy") orderBy: String? = null
+        @Query("surname") surname: String? = null,
+        @Query("middle_name") middleName: String? = null,
+        @Query("birthday") birthday: String? = null,
+        @Query("email") email: String? = null,
+        @Query("login") login: String? = null,
+        @Query("sex") sex: String? = null,
+        @Query("min_age") minAge: Int? = null,
+        @Query("max_age") maxAge: Int? = null,
+        @Query("ordering") ordering: String? = null
+    ): Response<UserResponse>
+
+    @GET("users/search/")
+    suspend fun searchUsers(
+        @Query("page") page: Int,
+        @Query("pageSize") pageSize: Int,
+        @Query("query") query: String
     ): Response<UserResponse>
 
     @GET("api/users/{id}/")

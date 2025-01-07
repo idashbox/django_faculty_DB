@@ -9,11 +9,11 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.faculty_app.R
-import com.example.faculty_app.UserToGroupAdapter
+import com.example.faculty_app.ui.adapters.UserToGroupAdapter
 import com.example.faculty_app.data.factories.UserToGroupViewModelFactory
 import com.example.faculty_app.data.view_models.UserToGroupViewModel
 import com.example.faculty_app.data.repositories.UserToGroupRepository
-import com.example.faculty_app.ui.user_to_group.AddUserToGroupActivity
+import com.example.faculty_app.ui.activities.user_to_group.AddUserToGroupActivity
 
 class UserToGroupListActivity : AppCompatActivity() {
 

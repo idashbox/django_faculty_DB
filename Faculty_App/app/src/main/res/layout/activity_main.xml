@@ -1,10 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FDF5D3">
+    android:background="#201E21">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -15,10 +14,10 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#4DBA29"
+            android:background="#A6FFC107"
             android:theme="@style/ThemeOverlay.MaterialComponents.ActionBar"
             app:title="Выберите таблицу с данными"
-            app:titleTextColor="@android:color/white" />
+            app:titleTextColor="#201E21" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
@@ -26,16 +25,17 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="16dp"
-        android:background="#FDF5D3"
+        android:background="#201E21"
         android:layout_marginTop="16dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <!-- Группа кнопок на одном уровне -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="69dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="16dp"
+            android:weightSum="2">
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
@@ -43,7 +43,8 @@
                 android:layout_weight="1"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="4dp"
-                app:cardBackgroundColor="#B34DBA29">
+                app:cardBackgroundColor="#EFD056"
+                android:layout_marginEnd="8dp">
 
                 <Button
                     android:id="@+id/button_users"
@@ -51,7 +52,7 @@
                     android:layout_height="70dp"
                     android:background="?android:attr/selectableItemBackground"
                     android:text="Список пользователей"
-                    android:textColor="@android:color/white" />
+                    android:textColor="#201E21" />
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
@@ -60,7 +61,8 @@
                 android:layout_weight="1"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="4dp"
-                app:cardBackgroundColor="#B34DBA29">
+                app:cardBackgroundColor="#EFD056"
+                android:layout_marginStart="8dp">
 
                 <Button
                     android:id="@+id/button_teachers"
@@ -68,7 +70,7 @@
                     android:layout_height="67dp"
                     android:background="?android:attr/selectableItemBackground"
                     android:text="Список преподавателей"
-                    android:textColor="@android:color/white" />
+                    android:textColor="#201E21" />
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
@@ -77,23 +79,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="16dp"
+            android:weightSum="2">
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
-                android:layout_height="69dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="4dp"
-                app:cardBackgroundColor="#B34DBA29">
+                app:cardBackgroundColor="#EFD056"
+                android:layout_marginEnd="8dp">
 
                 <Button
                     android:id="@+id/button_departments"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="70dp"
                     android:background="?android:attr/selectableItemBackground"
                     android:text="Список кафедр"
-                    android:textColor="@android:color/white" />
+                    android:textColor="#201E21" />
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
@@ -102,7 +106,8 @@
                 android:layout_weight="1"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="4dp"
-                app:cardBackgroundColor="#B34DBA29">
+                app:cardBackgroundColor="#EFD056"
+                android:layout_marginStart="8dp">
 
                 <Button
                     android:id="@+id/button_user_to_group"
@@ -110,24 +115,26 @@
                     android:layout_height="71dp"
                     android:background="?android:attr/selectableItemBackground"
                     android:text="Список студентов"
-                    android:textColor="@android:color/white" />
+                    android:textColor="#201E21" />
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
         <!-- Третья группа кнопок -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="69dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_marginBottom="16dp"
-            android:orientation="horizontal">
+            android:weightSum="2">
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                app:cardBackgroundColor="#B34DBA29"
+                app:cardBackgroundColor="#EFD056"
                 app:cardCornerRadius="8dp"
-                app:cardElevation="4dp">
+                app:cardElevation="4dp"
+                android:layout_marginEnd="8dp">
 
                 <Button
                     android:id="@+id/button_groups"
@@ -135,16 +142,17 @@
                     android:layout_height="72dp"
                     android:background="?android:attr/selectableItemBackground"
                     android:text="Список групп"
-                    android:textColor="@android:color/white" />
+                    android:textColor="#201E21" />
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                app:cardBackgroundColor="#B34DBA29"
+                app:cardBackgroundColor="#EFD056"
                 app:cardCornerRadius="8dp"
-                app:cardElevation="4dp">
+                app:cardElevation="4dp"
+                android:layout_marginStart="8dp">
 
                 <Button
                     android:id="@+id/button_directions"
@@ -152,7 +160,7 @@
                     android:layout_height="72dp"
                     android:background="?android:attr/selectableItemBackground"
                     android:text="Список направлений"
-                    android:textColor="@android:color/white" />
+                    android:textColor="#201E21" />
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 

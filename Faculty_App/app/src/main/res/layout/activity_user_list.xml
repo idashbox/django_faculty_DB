@@ -4,8 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FDF5D3">
+    android:background="#201E21">
 
+    <!-- Верхний бар -->
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,11 +16,11 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#B34DBA29"
+            android:background="#EFD056"
             android:theme="@style/ThemeOverlay.MaterialComponents.ActionBar"
             app:navigationIcon="@drawable/ic_arrow_back"
             app:title="Пользователи"
-            app:titleTextColor="#852E2C1B" />
+            app:titleTextColor="#201E21" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
@@ -29,20 +30,116 @@
         android:padding="16dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+        <!-- Секция поиска и фильтров -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="#E0DFDF">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- Поле поиска -->
+                <EditText
+                    android:id="@+id/editTextSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Введите имя пользователя"
+                    android:padding="12dp"
+                    android:backgroundTint="#EFD056"
+                    android:drawableLeft="@drawable/ic_search"
+                    android:drawablePadding="8dp" />
+
+                <!-- Кнопка поиска -->
+                <Button
+                    android:id="@+id/buttonSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:backgroundTint="#EFD056"
+                    android:text="Найти"
+                    android:textColor="#201E21" />
+
+                <!-- Выпадающий список фильтров -->
+                <Spinner
+                    android:id="@+id/spinnerFilter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:padding="12dp"
+                    android:backgroundTint="#E0DFDF"
+                    android:spinnerMode="dropdown" />
+
+                <!-- Кнопки фильтрации -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <Button
+                        android:id="@+id/buttonFilter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:backgroundTint="#EFD056"
+                        android:text="Выбрать фильтр"
+                        android:textColor="#201E21" />
+
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Кнопка добавления пользователя -->
         <Button
             android:id="@+id/button_add_user"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="#EFD056"
             android:text="Добавить нового пользователя"
-            android:backgroundTint="#B34DBA29"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="16dp" />
+            android:textColor="#201E21"
+            android:padding="12dp" />
 
-        <!-- RecyclerView -->
+        <!-- Список пользователей -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:layout_marginBottom="16dp"
+            android:padding="8dp" />
+
+        <!-- Навигация по страницам -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/buttonPreviousPage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="#EFD056"
+                android:text="Предыдущая"
+                android:textColor="#201E21" />
+
+            <Button
+                android:id="@+id/buttonNextPage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#EFD056"
+                android:text="Следующая"
+                android:textColor="#201E21" />
+        </LinearLayout>
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

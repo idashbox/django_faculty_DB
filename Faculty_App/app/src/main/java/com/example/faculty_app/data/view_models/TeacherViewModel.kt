@@ -41,14 +41,6 @@ class TeacherViewModel(private val teacherRepository: TeacherRepository) : ViewM
         fetchStatistics()
     }
 
-    // Переменные для хранения текущих фильтров
-    private var currentNameFilter: String? = null
-    private var currentSurnameFilter: String? = null
-    private var currentMiddleNameFilter: String? = null
-    private var currentBirthdayFilter: String? = null
-    private var currentDepartmentFilter: Int? = null
-    private var currentOrderBy: String? = "id"
-
     init {
         _pageSize.value = 10
         fetchTeachers()
@@ -101,39 +93,6 @@ class TeacherViewModel(private val teacherRepository: TeacherRepository) : ViewM
                 Log.e("TeacherViewModel", "Exception occurred: ${e.message}")
             }
         }
-    }
-
-
-    fun setFilter(
-        name: String? = null,
-        surname: String? = null,
-        middleName: String? = null,
-        birthday: String? = null,
-        departmentId: Int? = null,
-        orderBy: String? = null
-    ) {
-        currentNameFilter = name
-        currentSurnameFilter = surname
-        currentMiddleNameFilter = middleName
-        currentBirthdayFilter = birthday
-        currentDepartmentFilter = departmentId
-        currentOrderBy = orderBy
-
-        // Сбрасываем на первую страницу при изменении фильтра
-        _currentPage = 1
-        fetchTeachers()
-    }
-
-    fun clearFilters() {
-        currentNameFilter = null
-        currentSurnameFilter = null
-        currentMiddleNameFilter = null
-        currentBirthdayFilter = null
-        currentDepartmentFilter = null
-        currentOrderBy = "id"
-
-        _currentPage = 1
-        fetchTeachers()
     }
 
     fun addTeacher(teacher: Teacher) {

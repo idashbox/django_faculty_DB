@@ -9,11 +9,11 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.faculty_app.R
-import com.example.faculty_app.GroupAdapter
+import com.example.faculty_app.ui.adapters.GroupAdapter
 import com.example.faculty_app.data.factories.GroupViewModelFactory
 import com.example.faculty_app.data.view_models.GroupViewModel
 import com.example.faculty_app.data.repositories.GroupRepository
-import com.example.faculty_app.ui.groups.AddGroupActivity
+import com.example.faculty_app.ui.activities.groups.AddGroupActivity
 
 class GroupListActivity : AppCompatActivity() {
 

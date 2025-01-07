@@ -9,11 +9,11 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.faculty_app.R
-import com.example.faculty_app.DirectionAdapter
+import com.example.faculty_app.ui.adapters.DirectionAdapter
 import com.example.faculty_app.data.factories.DirectionViewModelFactory
 import com.example.faculty_app.data.view_models.DirectionViewModel
 import com.example.faculty_app.data.repositories.DirectionRepository
-import com.example.faculty_app.ui.directions.AddDirectionActivity
+import com.example.faculty_app.ui.activities.directions.AddDirectionActivity
 
 class DirectionListActivity : AppCompatActivity() {
 

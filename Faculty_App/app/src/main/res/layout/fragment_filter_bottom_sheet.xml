@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FDF5D3">
+    android:background="#201E21">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,7 +20,7 @@
             android:layout_marginBottom="16dp"
             app:cardCornerRadius="8dp"
             app:cardElevation="4dp"
-            app:cardBackgroundColor="#FFFFFF">
+            app:cardBackgroundColor="#E0DFDF">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -42,7 +42,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Минимальный возраст"
                     android:padding="12dp"
-                    android:backgroundTint="#4DBA29" />
+                    android:backgroundTint="#EFD056" />
 
                 <EditText
                     android:id="@+id/editTextMaxAge"
@@ -50,7 +50,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Максимальный возраст"
                     android:padding="12dp"
-                    android:backgroundTint="#4DBA29"
+                    android:backgroundTint="#EFD056"
                     android:layout_marginTop="8dp" />
 
                 <!-- Год начала работы -->
@@ -68,7 +68,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Минимальный год"
                     android:padding="12dp"
-                    android:backgroundTint="#4DBA29" />
+                    android:backgroundTint="#EFD056" />
 
                 <EditText
                     android:id="@+id/editTextMaxYearStart"
@@ -76,7 +76,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Максимальный год"
                     android:padding="12dp"
-                    android:backgroundTint="#4DBA29"
+                    android:backgroundTint="#EFD056"
                     android:layout_marginTop="8dp" />
 
                 <!-- Пол -->
@@ -115,9 +115,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:backgroundTint="#4DBA29"
+                    android:backgroundTint="#EFD056"
                     android:text="Применить фильтры"
-                    android:textColor="@android:color/white" />
+                    android:textColor="#201E21" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
     </LinearLayout>

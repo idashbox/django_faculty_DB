@@ -2,22 +2,19 @@ package com.example.faculty_app.data.views
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.widget.Button
-import android.widget.EditText
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.faculty_app.DepartmentAdapter
+import com.example.faculty_app.ui.adapters.DepartmentAdapter
 import com.example.faculty_app.R
 import com.example.faculty_app.data.view_models.DepartmentViewModel
 import com.example.faculty_app.data.factories.DepartmentViewModelFactory
 import com.example.faculty_app.data.repositories.DepartmentRepository
-import com.example.faculty_app.ui.dapartments.AddDepartmentActivity
+import com.example.faculty_app.ui.activities.dapartments.AddDepartmentActivity
 
 class DepartmentListActivity : AppCompatActivity() {
 

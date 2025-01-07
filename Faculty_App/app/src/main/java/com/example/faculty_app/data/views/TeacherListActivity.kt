@@ -1,6 +1,5 @@
 package com.example.faculty_app.data.views
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.*
@@ -10,12 +9,12 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.faculty_app.R
-import com.example.faculty_app.TeacherAdapter
+import com.example.faculty_app.ui.adapters.TeacherAdapter
 import com.example.faculty_app.data.factories.TeacherViewModelFactory
 import com.example.faculty_app.data.view_models.TeacherViewModel
 import com.example.faculty_app.data.repositories.TeacherRepository
-import com.example.faculty_app.ui.teachers.AddTeacherActivity
-import com.example.faculty_app.ui.filter.FilterBottomSheet
+import com.example.faculty_app.ui.activities.teachers.AddTeacherActivity
+import com.example.faculty_app.ui.fragments.filter.FilterBottomSheet
 
 class TeacherListActivity : AppCompatActivity(), FilterBottomSheet.OnFilterApplyListener {
 
