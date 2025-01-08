@@ -40,8 +40,11 @@ class GroupAdapter(private val viewModel: GroupViewModel) : ListAdapter<Group, G
 
         fun bind(group: Group) {
             viewModel.getDirection(group.direction) { direction ->
-                Log.d("GroupAdapter", "Binding user to group: ${group.course + group.number}")
-                nameTextView.text = "$direction курс: ${group.course} группа: ${group.number}"
+                if (direction.isNotEmpty()) {
+                    nameTextView.text = "$direction курс: ${group.course} группа: ${group.number}"
+                } else {
+                    nameTextView.text = "Group Name курс: ${group.course} группа: ${group.number}"
+                }
             }
 
             editButton.setOnClickListener {

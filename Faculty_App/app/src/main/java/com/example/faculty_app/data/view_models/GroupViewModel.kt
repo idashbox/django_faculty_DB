@@ -5,7 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.faculty_app.data.models.Direction
 import com.example.faculty_app.data.models.Group
+import com.example.faculty_app.data.models.Teacher
 import com.example.faculty_app.data.models.UserToGroup
 import com.example.faculty_app.data.repositories.GroupRepository
 import kotlinx.coroutines.launch
@@ -32,6 +34,13 @@ class GroupViewModel(private val groupRepository: GroupRepository) : ViewModel()
 
     private val _students = MutableLiveData<List<UserToGroup>>()
     val students: LiveData<List<UserToGroup>> get() = _students
+
+    private val _teachers = MutableLiveData<List<Teacher>>()
+    val teachers: LiveData<List<Teacher>> get() = _teachers
+
+    private val _directions = MutableLiveData<List<Direction>>()
+    val directions: LiveData<List<Direction>> get() = _directions
+
 
     init {
         _pageSize.value = 10
@@ -120,15 +129,19 @@ class GroupViewModel(private val groupRepository: GroupRepository) : ViewModel()
                 val response = groupRepository.getDirection(id)
                 if (response.isSuccessful) {
                     val directionResponse = response.body()
-                    directionCallback?.invoke(directionResponse?.title ?: "")
+                    val directionTitle = directionResponse?.title ?: ""
+                    callback(directionTitle)
                 } else {
                     Log.e("GroupViewModel", "Failed to fetch direction: ${response.errorBody()?.string()}")
+                    callback("")
                 }
             } catch (e: Exception) {
                 Log.e("GroupViewModel", "Exception occurred: ${e.message}")
+                callback("")
             }
         }
     }
+
 
     fun fetchStudentsForGroup(groupId: Int) {
         viewModelScope.launch {
@@ -156,5 +169,62 @@ class GroupViewModel(private val groupRepository: GroupRepository) : ViewModel()
         }
     }
 
+    fun fetchAllStudentsForGroup() {
+        viewModelScope.launch {
+            try {
+                val response = groupRepository.getUsersToGroup(1, 100, orderBy = "user__surname")
+                if (response.isSuccessful) {
+                    val userToGroupResponse = response.body()
+                    if (userToGroupResponse != null) {
+                        val allUserToGroup = userToGroupResponse.results
+                        if (allUserToGroup != null) {
+                            _students.postValue(allUserToGroup)
+                        } else {
+                            Log.e("StudentListViewModel", "Results list is null")
+                        }
+                    } else {
+                        Log.e("StudentListViewModel", "Response body is null")
+                    }
+                } else {
+                    Log.e("StudentListViewModel", "Failed to fetch students: ${response.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                Log.e("StudentListViewModel", "Exception occurred: ${e.message}")
+            }
+        }
+    }
 
+    fun fetchTeachers() {
+        viewModelScope.launch {
+            try {
+                val response = groupRepository.getTeachers() // Метод репозитория для получения преподавателей
+                if (response.isSuccessful) {
+                    val teacherResponse = response.body()
+                    // Преобразование полученных данных в список преподавателей и обновление LiveData
+                    _teachers.postValue(teacherResponse?.results ?: emptyList())
+                } else {
+                    Log.e("GroupViewModel", "Failed to fetch teachers: ${response.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                Log.e("GroupViewModel", "Exception occurred: ${e.message}")
+            }
+        }
+    }
+
+    fun fetchDirections() {
+        viewModelScope.launch {
+            try {
+                val response = groupRepository.getDirections() // Метод репозитория для получения направлений
+                if (response.isSuccessful) {
+                    val directionResponse = response.body()
+                    // Преобразование полученных данных в список направлений и обновление LiveData
+                    _directions.postValue(directionResponse?.results ?: emptyList())
+                } else {
+                    Log.e("GroupViewModel", "Failed to fetch directions: ${response.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                Log.e("GroupViewModel", "Exception occurred: ${e.message}")
+            }
+        }
+    }
 }

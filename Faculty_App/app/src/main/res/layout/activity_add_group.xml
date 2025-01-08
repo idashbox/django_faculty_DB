@@ -59,10 +59,10 @@
                 android:hint="Выберите старосту" />
 
             <Spinner
-                android:id="@+id/spinnerDepartment"
+                android:id="@+id/spinnerDirection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Выберите кафедру" />
+                android:hint="Выберите направление" />
 
             <Button
                 android:id="@+id/buttonSave"

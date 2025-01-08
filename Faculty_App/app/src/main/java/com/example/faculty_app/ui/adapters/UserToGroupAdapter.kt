@@ -42,15 +42,16 @@ class UserToGroupAdapter(private val viewModel: UserToGroupViewModel) : ListAdap
 
             editButton.setOnClickListener {
                 val intent = Intent(itemView.context, EditUserToGroupActivity::class.java).apply {
-                    putExtra("TEACHER_ID", userToGroup.id)
+                    putExtra("USER_TO_GROUP_ID", userToGroup.id)
                     putExtra("USER_ID", userToGroup.user.id)
-                    putExtra("TEACHER_NAME", userToGroup.user.name)
-                    putExtra("TEACHER_EMAIL", userToGroup.user.email)
-                    putExtra("TEACHER_LOGIN", userToGroup.user.login)
-                    putExtra("TEACHER_SURNAME", userToGroup.user.surname)
-                    putExtra("TEACHER_MIDDLE_NAME", userToGroup.user.middle_name)
-                    putExtra("TEACHER_BIRTHDAY", userToGroup.user.birthday)
-                    putExtra("TEACHER_GENDER", userToGroup.user.sex)
+                    putExtra("USER_NAME", userToGroup.user.name)
+                    putExtra("USER_SURNAME", userToGroup.user.surname)
+                    putExtra("USER_MIDDLE_NAME", userToGroup.user.middle_name)
+                    putExtra("USER_EMAIL", userToGroup.user.email)
+                    putExtra("USER_LOGIN", userToGroup.user.login)
+                    putExtra("USER_PASSWORD", userToGroup.user.password)
+                    putExtra("USER_BIRTHDAY", userToGroup.user.birthday)
+                    putExtra("USER_GENDER", userToGroup.user.sex)
                     putExtra("GROUP_ID", userToGroup.group)
                 }
                 (itemView.context as Activity).startActivityForResult(intent, 2)

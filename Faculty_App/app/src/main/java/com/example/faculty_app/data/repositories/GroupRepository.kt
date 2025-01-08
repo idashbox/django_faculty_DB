@@ -6,6 +6,7 @@ import com.example.faculty_app.data.network.ApiService
 import com.example.faculty_app.data.network.RetrofitClient.retrofit
 import com.example.faculty_app.data.models.Group
 import com.example.faculty_app.data.models.GroupResponse
+import com.example.faculty_app.data.models.TeacherResponse
 import com.example.faculty_app.data.models.UserToGroup
 import com.example.faculty_app.data.models.UserToGroupResponse
 import retrofit2.Response
@@ -57,5 +58,21 @@ class GroupRepository {
         return apiService.getUserToGroups(page, pageSize, name, orderBy)
     }
 
+    suspend fun getTeachers(
+        page: Int = 1,
+        pageSize: Int = 10,
+        nameFilter: String? = null,
+        orderBy: String? = null
+    ): Response<TeacherResponse> {
+        return apiService.getTeachers(page, pageSize, nameFilter, orderBy)
+    }
 
+    suspend fun getDirections(
+        page: Int = 1,
+        pageSize: Int = 10,
+        nameFilter: String? = null,
+        orderBy: String? = null
+    ): Response<DirectionResponse> {
+        return apiService.getDirections(page, pageSize, nameFilter, orderBy)
+    }
 }
