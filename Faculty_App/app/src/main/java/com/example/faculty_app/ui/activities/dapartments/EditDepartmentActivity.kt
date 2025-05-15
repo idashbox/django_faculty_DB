@@ -1,8 +1,11 @@
 package com.example.faculty_app.ui.activities.dapartments
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -16,6 +19,7 @@ class EditDepartmentActivity : AppCompatActivity() {
     private lateinit var titleEditText: EditText
     private lateinit var saveButton: Button
     private lateinit var headOfDepartmentID: EditText
+    private lateinit var deleteButton: Button
     private var departmentId: Int = 0
     private lateinit var departmentViewModel: DepartmentViewModel
 
@@ -31,6 +35,7 @@ class EditDepartmentActivity : AppCompatActivity() {
         titleEditText = findViewById(R.id.editTextTitle)
         headOfDepartmentID = findViewById(R.id.editHead)
         saveButton = findViewById(R.id.buttonSave)
+        deleteButton = findViewById(R.id.button_delete)
 
         departmentId = intent.getIntExtra("DEPARTMENT_ID", 0)
         val headID = intent.getIntExtra("DEPARTMENT_HEAD_ID", 0)
@@ -50,9 +55,20 @@ class EditDepartmentActivity : AppCompatActivity() {
                 setResult(RESULT_OK)
                 finish()
             } else {
-                // Покажите сообщение об ошибке, если необходимо
             }
         })
+        deleteButton.setOnClickListener {
+            AlertDialog.Builder(this)
+                .setTitle("Подтверждение удаления")
+                .setMessage("Вы уверены, что хотите удалить кафедру ${titleEditText.text}?")
+                .setPositiveButton("Да") { _, _ ->
+                    departmentViewModel.deleteDepartment(departmentId)
+                    Toast.makeText(this, "Кафедра удалена", Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+                .setNegativeButton("Нет", null)
+                .show()
+        }
 
 
         val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)

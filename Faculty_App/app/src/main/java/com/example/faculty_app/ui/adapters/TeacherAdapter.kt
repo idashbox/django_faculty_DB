@@ -33,7 +33,6 @@ class TeacherAdapter(private val viewModel: TeacherViewModel) : ListAdapter<Teac
 
     inner class TeacherViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val nameTextView: TextView = itemView.findViewById(R.id.teacherName)
-        private val deleteButton: Button = itemView.findViewById(R.id.button_delete)
         private val editButton: Button = itemView.findViewById(R.id.button_edit)
 
         fun bind(teacher: Teacher) {
@@ -55,21 +54,6 @@ class TeacherAdapter(private val viewModel: TeacherViewModel) : ListAdapter<Teac
                     putExtra("TEACHER_DEPARTMENT_ID", teacher.department)
                 }
                 (itemView.context as Activity).startActivityForResult(intent, 2)
-            }
-
-            deleteButton.setOnClickListener {
-                val position = adapterPosition
-                if (position != RecyclerView.NO_POSITION) {
-                    val teacher = getItem(position)
-                    AlertDialog.Builder(itemView.context)
-                        .setTitle("Подтверждение удаления")
-                        .setMessage("Вы уверены, что хотите удалить пользователя ${teacher.user.name}?")
-                        .setPositiveButton("Да") { _, _ ->
-                            viewModel.deleteTeacher(teacher.id)
-                        }
-                        .setNegativeButton("Нет", null)
-                        .show()
-                }
             }
         }
     }

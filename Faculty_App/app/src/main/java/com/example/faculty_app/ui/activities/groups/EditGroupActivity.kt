@@ -3,6 +3,7 @@ package com.example.faculty_app.ui.activities.groups
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -19,6 +20,7 @@ class EditGroupActivity : AppCompatActivity() {
     private lateinit var saveButton: Button
     private lateinit var groupViewModel: GroupViewModel
     private var groupId: Int = 0
+    private lateinit var deleteButton: Button
     private lateinit var spinnerCurator: Spinner
     private lateinit var spinnerHeadman: Spinner
     private lateinit var spinnerDirection: Spinner
@@ -44,6 +46,7 @@ class EditGroupActivity : AppCompatActivity() {
         spinnerCurator = findViewById(R.id.spinnerCurstor)
         spinnerHeadman = findViewById(R.id.spinnerHeadman)
         spinnerDirection = findViewById(R.id.spinnerDirection)
+        deleteButton = findViewById(R.id.button_delete)
 
         groupId = intent.getIntExtra("GROUP_ID", 0)
         curatorTitles = intent.getStringArrayListExtra("CURATORS") ?: emptyList()
@@ -102,6 +105,19 @@ class EditGroupActivity : AppCompatActivity() {
                 }
             }
         })
+
+        deleteButton.setOnClickListener {
+            AlertDialog.Builder(this)
+                .setTitle("Подтверждение удаления")
+                .setMessage("Вы уверены, что хотите удалить эту группу?")
+                .setPositiveButton("Да") { _, _ ->
+                    groupViewModel.deleteGroup(groupId)
+                    Toast.makeText(this, "Группа удалена", Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+                .setNegativeButton("Нет", null)
+                .show()
+        }
 
         saveButton.setOnClickListener {
             editGroup()

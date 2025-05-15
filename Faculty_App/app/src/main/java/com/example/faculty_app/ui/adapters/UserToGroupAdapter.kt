@@ -33,7 +33,6 @@ class UserToGroupAdapter(private val viewModel: UserToGroupViewModel) : ListAdap
 
     inner class UserToGroupViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val nameTextView: TextView = itemView.findViewById(R.id.user_to_group_name)
-        private val deleteButton: Button = itemView.findViewById(R.id.button_delete)
         private val editButton: Button = itemView.findViewById(R.id.button_edit)
 
         fun bind(userToGroup: UserToGroup) {
@@ -55,22 +54,6 @@ class UserToGroupAdapter(private val viewModel: UserToGroupViewModel) : ListAdap
                     putExtra("GROUP_ID", userToGroup.group)
                 }
                 (itemView.context as Activity).startActivityForResult(intent, 2)
-            }
-
-            // Обработчик для кнопки удаления
-            deleteButton.setOnClickListener {
-                val position = adapterPosition
-                if (position != RecyclerView.NO_POSITION) {
-                    val userToGroup = getItem(position)
-                    AlertDialog.Builder(itemView.context)
-                        .setTitle("Подтверждение удаления")
-                        .setMessage("Вы уверены, что хотите удалить пользователя ${userToGroup.user.name}?")
-                        .setPositiveButton("Да") { _, _ ->
-                            viewModel.deleteUserToGroup(userToGroup.id)
-                        }
-                        .setNegativeButton("Нет", null)
-                        .show()
-                }
             }
         }
     }

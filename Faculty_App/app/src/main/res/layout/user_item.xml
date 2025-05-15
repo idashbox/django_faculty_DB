@@ -18,14 +18,5 @@
         android:backgroundTint="#EFD056"
         android:textColor="#201E21"
         android:layout_marginBottom="12dp"
-        android:text="Изменить" />
-
-    <Button
-        android:id="@+id/button_delete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#EFD056"
-        android:textColor="#201E21"
-        android:layout_marginBottom="12dp"
-        android:text="Удалить" />
+        android:drawableLeft="@drawable/ic_pencil" />
 </LinearLayout>

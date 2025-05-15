@@ -36,7 +36,6 @@ class DepartmentAdapter(private val viewModel: DepartmentViewModel) : ListAdapte
     inner class DepartmentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val titleTextView: TextView = itemView.findViewById(R.id.departmentTitle)
         private val editButton: Button = itemView.findViewById(R.id.button_edit)
-        private val deleteButton: Button = itemView.findViewById(R.id.button_delete)
 
         fun bind(department: Department) {
             Log.d("DepartmentAdapter", "Binding department: ${department.title}")
@@ -50,20 +49,6 @@ class DepartmentAdapter(private val viewModel: DepartmentViewModel) : ListAdapte
                     putExtra("DEPARTMENT_HEAD_ID", department.head_of_department)
                 }
                 (itemView.context as Activity).startActivityForResult(intent, 2)
-            }
-
-            // Обработчик для кнопки удаления
-            deleteButton.setOnClickListener {
-                Log.d("DepartmentAdapter", "Delete button clicked for department: ${department.title}")
-                AlertDialog.Builder(itemView.context)
-                    .setTitle("Подтверждение удаления")
-                    .setMessage("Вы уверены, что хотите удалить кафедру ${department.title}?")
-                    .setPositiveButton("Да") { _, _ ->
-                        Log.d("DepartmentAdapter", "Deleting department with id: ${department.id}")
-                        viewModel.deleteDepartment(department.id) // Удаление через ViewModel
-                    }
-                    .setNegativeButton("Нет", null)
-                    .show()
             }
         }
     }

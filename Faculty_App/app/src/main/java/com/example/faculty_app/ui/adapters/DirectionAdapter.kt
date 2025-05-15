@@ -33,7 +33,6 @@ class DirectionAdapter(private val viewModel: DirectionViewModel) : ListAdapter<
 
     inner class DirectionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val nameTextView: TextView = itemView.findViewById(R.id.direction_name)
-        private val deleteButton: Button = itemView.findViewById(R.id.button_delete)
         private val editButton: Button = itemView.findViewById(R.id.button_edit)
 
         fun bind(direction: Direction) {
@@ -49,21 +48,6 @@ class DirectionAdapter(private val viewModel: DirectionViewModel) : ListAdapter<
                     putExtra("DIRECTION_DEPARTMENT", direction.department)
                 }
                 (itemView.context as Activity).startActivityForResult(intent, 2)
-            }
-
-            deleteButton.setOnClickListener {
-                val position = adapterPosition
-                if (position != RecyclerView.NO_POSITION) {
-                    val group = getItem(position)
-                    AlertDialog.Builder(itemView.context)
-                        .setTitle("Подтверждение удаления")
-                        .setMessage("Вы уверены, что хотите удалить направление ${direction.title}?")
-                        .setPositiveButton("Да") { _, _ ->
-                            viewModel.deleteDirection(group.id)
-                        }
-                        .setNegativeButton("Нет", null)
-                        .show()
-                }
             }
         }
     }

@@ -5,9 +5,11 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.RecyclerView
 import com.example.faculty_app.R
 import com.example.faculty_app.data.factories.TeacherViewModelFactory
 import com.example.faculty_app.data.models.Teacher
@@ -29,6 +31,7 @@ class EditTeacherActivity : AppCompatActivity() {
     private lateinit var genderRadioGroup: RadioGroup
     private lateinit var departmentSpinner: Spinner
     private lateinit var yearsOfWorkEditText: EditText
+    private lateinit var deleteButton: Button
     private lateinit var saveButton: Button
     private var selectedDepartmentId: Int = 0
     private var selectedBirthday: Calendar = Calendar.getInstance()
@@ -56,6 +59,7 @@ class EditTeacherActivity : AppCompatActivity() {
         genderRadioGroup = findViewById(R.id.radioGroupGender)
         departmentSpinner = findViewById(R.id.spinnerDepartment)
         yearsOfWorkEditText = findViewById(R.id.editTextYearsOfWork)
+        deleteButton = findViewById(R.id.button_delete)
         saveButton = findViewById(R.id.buttonSave)
 
         teacherId = intent.getIntExtra("TEACHER_ID", 0)
@@ -75,6 +79,19 @@ class EditTeacherActivity : AppCompatActivity() {
             genderRadioGroup.check(R.id.radioButtonFemale)
         } else if (teacherGender == "Male") {
             genderRadioGroup.check(R.id.radioButtonMale)
+        }
+
+        deleteButton.setOnClickListener {
+            AlertDialog.Builder(this)
+                .setTitle("Подтверждение удаления")
+                .setMessage("Вы уверены, что хотите удалить пользователя ${nameEditText.text}?")
+                .setPositiveButton("Да") { _, _ ->
+                    teacherViewModel.deleteTeacher(teacherId)
+                    Toast.makeText(this, "Преподаватель удалён", Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+                .setNegativeButton("Нет", null)
+                .show()
         }
 
         val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->

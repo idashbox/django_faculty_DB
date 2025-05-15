@@ -34,7 +34,6 @@ class GroupAdapter(private val viewModel: GroupViewModel) : ListAdapter<Group, G
 
     inner class GroupViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val nameTextView: TextView = itemView.findViewById(R.id.group_name)
-        private val deleteButton: Button = itemView.findViewById(R.id.button_delete)
         private val editButton: Button = itemView.findViewById(R.id.button_edit)
         private val viewStudentsButton: Button = itemView.findViewById(R.id.button_view_students)
 
@@ -57,21 +56,6 @@ class GroupAdapter(private val viewModel: GroupViewModel) : ListAdapter<Group, G
                     putExtra("GROUP_CURATOR", group.curator)
                 }
                 (itemView.context as Activity).startActivityForResult(intent, 2)
-            }
-
-            deleteButton.setOnClickListener {
-                val position = adapterPosition
-                if (position != RecyclerView.NO_POSITION) {
-                    val group = getItem(position)
-                    AlertDialog.Builder(itemView.context)
-                        .setTitle("Подтверждение удаления")
-                        .setMessage("Вы уверены, что хотите удалить группу ${group.course + group.number}?")
-                        .setPositiveButton("Да") { _, _ ->
-                            viewModel.deleteGroup(group.id)
-                        }
-                        .setNegativeButton("Нет", null)
-                        .show()
-                }
             }
 
             viewStudentsButton.setOnClickListener {

@@ -25,8 +25,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity android:name=".ui.activities.auth.LoginActivity" />
         <activity android:name=".ui.activities.MainActivity" />
+        <activity android:name=".ui.activities.MainActivityForTeacher" />
+        <activity android:name=".ui.activities.MainActivityForUserToGroup" />
 
         <activity android:name=".data.views.UserListActivity" />
 

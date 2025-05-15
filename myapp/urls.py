@@ -1,5 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+
+from .login_logout import LoginView, LogoutView, ProfileView
 from .views import UserViewSet, TeacherViewSet, DepartmentViewSet, UserDetailView, DepartmentDetailView, \
     TeacherDetailView, DirectionOfStudyViewSet, GroupViewSet, UserToGroupViewSet, DirectionOfStudyView, GroupView, \
     UserToGroupView, StatisticsView, TeacherSearchView, TeacherFilteredView, UserSearchView
@@ -15,6 +17,9 @@ router.register(r'user_to_groups', UserToGroupViewSet)
 
 urlpatterns = [
     path('api/', include(router.urls)),
+    path('login/', LoginView.as_view(), name='login'),
+    path('logout/', LogoutView.as_view(), name='logout'),
+    path('profile/', ProfileView.as_view(), name='profile'),
     path('api/users/<int:pk>/', UserDetailView.as_view(), name='user-detail'),
     path('users/search/', UserSearchView.as_view(), name='user-search'),
     path('api/departments/<int:pk>/', DepartmentDetailView.as_view(), name='department-detail'),

@@ -3,6 +3,7 @@ package com.example.faculty_app.ui.activities.directions
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -20,6 +21,7 @@ class EditDirectionActivity : AppCompatActivity() {
     private lateinit var degreeEdit: EditText
     private lateinit var departmentSpinner: Spinner
     private lateinit var saveButton: Button
+    private lateinit var deleteButton: Button
     private lateinit var directionViewModel: DirectionViewModel
     private var selectedDepartmentId: Int = 0
     private var directionId: Int = 0
@@ -38,6 +40,7 @@ class EditDirectionActivity : AppCompatActivity() {
         degreeEdit = findViewById(R.id.editDegree)
         departmentSpinner = findViewById(R.id.spinnerDepartment)
         saveButton = findViewById(R.id.buttonSave)
+        deleteButton = findViewById(R.id.button_delete)
 
         directionId = intent.getIntExtra("DIRECTION_ID", 0)
         val title = intent.getStringExtra("DIRECTION_TITLE")
@@ -67,6 +70,18 @@ class EditDirectionActivity : AppCompatActivity() {
                 }
             }
         })
+        deleteButton.setOnClickListener {
+            AlertDialog.Builder(this)
+                .setTitle("Подтверждение удаления")
+                .setMessage("Вы уверены, что хотите удалить направление ${titleEdit.text}?")
+                .setPositiveButton("Да") { _, _ ->
+                    directionViewModel.deleteDirection(directionId)
+                    Toast.makeText(this, "Направление удалено", Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+                .setNegativeButton("Нет", null)
+                .show()
+        }
 
         selectedDepartmentId = departmentId
 

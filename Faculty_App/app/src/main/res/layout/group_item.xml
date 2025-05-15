@@ -24,25 +24,13 @@
         android:layout_width="106dp"
         android:layout_height="39dp"
         android:backgroundTint="#EFD056"
-        android:text="Изменить"
+        android:drawableLeft="@drawable/ic_pencil"
         android:textColor="#201E21"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/group_name"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/button_delete"
-        android:layout_width="106dp"
-        android:layout_height="39dp"
-        android:backgroundTint="#EFD056"
-        android:text="Удалить"
-        android:textColor="#201E21"
-        android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/group_name"
-        app:layout_constraintTop_toBottomOf="@+id/button_edit" />
 
     <Button
         android:id="@+id/button_view_students"
@@ -55,5 +43,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/group_name"
-        app:layout_constraintTop_toBottomOf="@+id/button_delete" />
+        app:layout_constraintTop_toBottomOf="@+id/button_edit" />
 </androidx.constraintlayout.widget.ConstraintLayout>

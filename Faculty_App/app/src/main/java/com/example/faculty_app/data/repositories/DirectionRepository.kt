@@ -2,17 +2,14 @@ package com.example.faculty_app.data.repositories
 
 import com.example.faculty_app.data.models.DepartmentResponse
 import com.example.faculty_app.data.network.ApiService
-import com.example.faculty_app.data.network.RetrofitClient.retrofit
 import com.example.faculty_app.data.models.Direction
 import com.example.faculty_app.data.models.DirectionResponse
+import com.example.faculty_app.data.network.RetrofitClient
 import retrofit2.Response
 
 class DirectionRepository {
 
-    private val apiService: ApiService
-    init {
-        apiService = retrofit.create(ApiService::class.java)
-    }
+    private val apiService: ApiService = RetrofitClient.apiService
 
     suspend fun getDirections(
         page: Int,

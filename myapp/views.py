@@ -113,7 +113,7 @@ class TeacherFilteredViewSet(viewsets.ModelViewSet):
     filterset_fields = ['user__name', 'user__surname', 'user__middle_name', 'user__birthday', 'user__email',
                         'user__login', 'user__sex', 'department', 'year_of_start_of_work']
     search_fields = ['user__name', 'user__surname', 'user__middle_name', 'user__email', 'user__login', 'user__sex']
-    ordering_fields = ['id', 'user__name', 'user__surname', 'user__birthday', 'year_of_start_of_work']
+    ordering_fields = ['id', 'user__name', 'user__surname','user__middle_name', 'user__birthday', 'year_of_start_of_work']
 
     def get_queryset(self):
         queryset = self.queryset

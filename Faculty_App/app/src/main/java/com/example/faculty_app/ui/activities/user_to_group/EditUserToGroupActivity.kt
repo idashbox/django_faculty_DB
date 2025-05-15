@@ -3,6 +3,7 @@ package com.example.faculty_app.ui.activities.user_to_group
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -27,6 +28,7 @@ class EditUserToGroupActivity : AppCompatActivity() {
     private lateinit var genderRadioGroup: RadioGroup
     private lateinit var groupSpinner: Spinner
     private lateinit var saveButton: Button
+    private lateinit var deleteButton: Button
     private lateinit var userToGroupViewModel: UserToGroupViewModel
 
     private var selectedBirthday: Calendar = Calendar.getInstance()
@@ -53,6 +55,7 @@ class EditUserToGroupActivity : AppCompatActivity() {
         genderRadioGroup = findViewById(R.id.radioGroupGender)
         groupSpinner = findViewById(R.id.spinnerGroup)
         saveButton = findViewById(R.id.buttonSave)
+        deleteButton = findViewById(R.id.button_delete)
 
         val intent = intent
         userToGroupId = intent.getIntExtra("USER_TO_GROUP_ID", 0)
@@ -107,6 +110,20 @@ class EditUserToGroupActivity : AppCompatActivity() {
         toolbar.setNavigationOnClickListener {
             onBackPressed()
         }
+
+        deleteButton.setOnClickListener {
+            AlertDialog.Builder(this)
+                .setTitle("Подтверждение удаления")
+                .setMessage("Вы уверены, что хотите удалить студента ${nameEditText.text}?")
+                .setPositiveButton("Да") { _, _ ->
+                    userToGroupViewModel.deleteUserToGroup(userToGroupId)
+                    Toast.makeText(this, "Студент удалён", Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+                .setNegativeButton("Нет", null)
+                .show()
+        }
+
         val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
             selectedBirthday.set(Calendar.YEAR, year)
             selectedBirthday.set(Calendar.MONTH, month)

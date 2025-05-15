@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -21,6 +22,7 @@ class EditUserActivity : AppCompatActivity() {
     private lateinit var surnameEditText: EditText
     private lateinit var middleNameEditText: EditText
     private lateinit var emailEditText: EditText
+    private lateinit var deleteButton: Button
     private lateinit var loginEditText: EditText
     private lateinit var passwordEditText: EditText
     private lateinit var birthdayEditText: EditText
@@ -48,6 +50,7 @@ class EditUserActivity : AppCompatActivity() {
         birthdayEditText = findViewById(R.id.editTextBirthday)
         genderRadioGroup = findViewById(R.id.radioGroupGender)
         saveButton = findViewById(R.id.buttonSave)
+        deleteButton = findViewById(R.id.button_delete)
 
         userId = intent.getIntExtra("USER_ID", 0)
         val userName = intent.getStringExtra("USER_NAME")
@@ -84,6 +87,18 @@ class EditUserActivity : AppCompatActivity() {
             updateBirthdayEditText()
         }
 
+        deleteButton.setOnClickListener {
+            AlertDialog.Builder(this)
+                .setTitle("Подтверждение удаления")
+                .setMessage("Вы уверены, что хотите удалить пользователя ${nameEditText.text}?")
+                .setPositiveButton("Да") { _, _ ->
+                    userViewModel.deleteUser(userId)
+                    Toast.makeText(this, "Преподаватель удалён", Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+                .setNegativeButton("Нет", null)
+                .show()
+        }
         birthdayEditText.setOnClickListener {
             DatePickerDialog(
                 this,

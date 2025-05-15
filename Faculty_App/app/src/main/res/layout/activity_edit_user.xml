@@ -117,6 +117,13 @@
                 android:text="Сохранить"
                 android:backgroundTint="#EFD056"
                 android:textColor="#201E21" />
+            <Button
+                android:id="@+id/button_delete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#EFD056"
+                android:textColor="#201E21"
+                android:text="Удалить" />
         </LinearLayout>
     </ScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

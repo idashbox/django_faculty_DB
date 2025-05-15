@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.faculty_app.R
 import com.example.faculty_app.ui.activities.MainActivity
+import com.example.faculty_app.ui.activities.auth.LoginActivity
 
 class SplashActivity : AppCompatActivity() {
 
@@ -43,7 +44,7 @@ class SplashActivity : AppCompatActivity() {
         splashText2.paint.shader = shader2
 
         Handler(Looper.getMainLooper()).postDelayed({
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish()
         }, 5000)

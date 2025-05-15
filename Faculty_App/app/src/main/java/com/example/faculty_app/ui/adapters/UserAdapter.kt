@@ -34,7 +34,6 @@ class UserAdapter(
 
     inner class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val nameTextView: TextView = itemView.findViewById(R.id.userName)
-        private val deleteButton: Button = itemView.findViewById(R.id.button_delete)
         private val editButton: Button = itemView.findViewById(R.id.button_edit)
 
         fun bind(user: User) {
@@ -52,22 +51,6 @@ class UserAdapter(
                     putExtra("USER_BIRTHDAY", user.birthday)
                 }
                 (itemView.context as Activity).startActivityForResult(intent, 2)
-            }
-
-            // Обработчик для кнопки удаления
-            deleteButton.setOnClickListener {
-                val position = adapterPosition
-                if (position != RecyclerView.NO_POSITION) {
-                    val user = getItem(position)
-                    AlertDialog.Builder(itemView.context)
-                        .setTitle("Подтверждение удаления")
-                        .setMessage("Вы уверены, что хотите удалить пользователя ${user.name}?")
-                        .setPositiveButton("Да") { _, _ ->
-                            viewModel.deleteUser(user.id) // Вызов метода удаления в ViewModel
-                        }
-                        .setNegativeButton("Нет", null)
-                        .show()
-                }
             }
         }
     }

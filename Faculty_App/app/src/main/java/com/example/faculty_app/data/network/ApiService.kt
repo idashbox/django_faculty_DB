@@ -18,6 +18,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
@@ -182,4 +183,7 @@ interface ApiService {
 
     @DELETE("api/user_to_groups/{id}/")
     suspend fun deleteUserToGroup(@Path("id") id: Int): Response<Void>
+
+    @GET("/profile/")
+    suspend fun getUserProfile(): Response<User>
 }
